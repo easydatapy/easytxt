@@ -84,3 +84,14 @@ for ``regular text`` since ``html`` is detected and processed automatically.
     >>> text_parser = TextParser(test_text)
     >>> text_parser.sentences
     ['Some sentence.', 'Easy HD camera.']
+
+Dependencies
+============
+
+`EasyTXT` relies on following libraries in some ways:
+
+  * ftfy_ to fix encoding.
+  * pyquery_ to help with html to text conversion.
+
+.. _ftfy: https://pypi.org/project/ftfy/
+.. _pyquery: https://pypi.org/project/pyquery/
