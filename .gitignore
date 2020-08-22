@@ -1,0 +1,12 @@
+.idea
+\#*\#
+.\#*
+*.egg-info
+*.py[co]
+.ecr_push_completed
+.ecr_push_failed
+.init.d
+dropin.cache
+docs/_build
+.pytest_cache/
+*~
