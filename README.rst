@@ -87,8 +87,8 @@ for ``regular text`` since ``html`` is detected and processed automatically.
     >>> text_parser.sentences
     ['Some sentence.', 'Easy HD camera.']
 
-Custom params examples
-----------------------
+Custom parameters
+-----------------
 **allow**
 
 We can control which sentences we want to get extracted by providing list of
@@ -142,6 +142,7 @@ By default all sentences will get capitalized as we can see bellow.
     ['First sentence?', 'Second sentence.', 'Third sentence.']
 
 We can disable this behaviour by settings parameter ``capitalize`` to ``False``.
+
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> text_parser = TextParser(test_text, capitalize=False)
     >>> text_parser.sentences
@@ -206,6 +207,7 @@ Please note that chars like ``.``, ``:``, ``?``, ``!`` are not considered
 as inline breaks.
 
 **inline_breaks**
+
 In above example we saw how default char breaks by default work. In cases when
 we want to split sentences by different char than default one, we can do so by
 providing list of chars into ``inline_breaks`` parameter.
@@ -240,16 +242,100 @@ custom one.
     First sentence? > Second sentence. > Third sentence.
 
 **OTHER PARAMETERS**
+
 There are also other parameters available which are currently not
 documented. *Please refer for now to source code or tests to examine
 their usage.*
 
-Not documented parameters are:
+Non documented parameters are:
 
 * merge_sentences
 * merge_keys
 * feature_split_keys
 * autodetect_html
+
+
+parse_string
+============
+``parse_string`` is a helper method to normalize and manipulate simple
+texts like titles or similar. It's also much performant than ``TextParser``
+since it doesn't perform sentence split, capitalization by default ...
+Basically it accepts string or float, int and returns normalized string.
+
+Examples
+--------
+In this example lets normalize text with bad encoding.
+
+    >>> from easytxt import parse_string
+    >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
+    >>> parse_string(test_text)
+    Easybook Pro 13 <3 ünicode
+
+Floats, integers will get transformed to string automatically.
+    >>> test_int = 123
+    >>> parse_string(test_text)
+    '123'
+
+    >>> test_float = 123.12
+    >>> parse_string(test_text)
+    '123.12'
+
+Custom parameters
+-----------------
+**normalize**
+
+As seen in example above text normalization (fixing spaces, bad encoding) is
+enabled by default through ``normalize`` parameter. Lets set ``normalize``
+parameter to ``False`` to disable normalization.
+
+    >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
+    >>> parse_string(test_text)
+    Easybook Pro 13 &lt;3 uÌˆnicode
+
+**replace_chars**
+
+We can replace chars/words in a string through ``replace_chars`` parameter.
+``replace_chars`` can accept regex pattern as a lookup key and is not
+case sensetive.
+
+    >>> test_text = 'Easybook Pro 15'
+    >>> parse_string(test_text, replace_chars=[('pro', 'Air'), ('15', '13')])
+    Easybook Air 13
+
+**split_key**
+
+Text can be split by ``split_key``. By default split index is ``0``.
+
+    >>> test_text = 'easybook-pro_13'
+    >>> parse_string(test_text, split_key='-')
+    easybook
+
+Lets specify split index through tuple.
+
+    >>> test_text = 'pro_13'
+    >>> parse_string(test_text, split_key=('-', -1))
+    easybook
+
+**split_keys**
+
+``split_keys`` work in a same way as ``split_keys`` but instead of single
+split key it accepts list of keys.
+
+
+    >>> test_text = 'easybook-pro_13'
+    >>> parse_string(test_text, split_keys=[('-', -1), '_'])
+    pro
+
+**OTHER PARAMETERS**
+
+There are also other parameters available which are currently not
+documented. *Please refer for now to source code to examine their usage.*
+
+Non documented parameters are:
+
+* fix_spaces
+* escape_new_lines
+* new_line_replacement
 
 
 Dependencies
