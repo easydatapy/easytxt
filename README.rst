@@ -100,6 +100,7 @@ keywords into ``allow`` parameter.
     ['First sentence?', 'Third sentence.']
 
 Regex pattern is also supported as parameter value:
+
     >>> text_parser = TextParser(test_text, allow=[r'\bfirst'])
 
 **callow**
