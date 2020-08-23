@@ -7,6 +7,8 @@ from easytxt import abbreviations, constants, text as utext
 def from_text(
         text: str,
         language: str = 'en',
+        split_inline_breaks: bool = True,
+        inline_breaks: Optional[List[str]] = None,
         min_char_len: int = 5
 ) -> List[str]:
 
@@ -35,7 +37,15 @@ def from_text(
     if text_parts:
         sentences.append(''.join(text_parts))
 
-    return sentences
+    sentences = [sen.strip() for sen in sentences if sen.strip()]
+
+    if split_inline_breaks:
+        sentences = split_inline_breaks_to_sentences(
+            sentences=sentences,
+            inline_breaks=inline_breaks
+        )
+
+    return remove_empty(sentences)
 
 
 def merge(
