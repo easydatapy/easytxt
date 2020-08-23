@@ -6,6 +6,8 @@ from tests import test_html
 
 features_test_text = '- color: Black - material: Aluminium'
 test_text_sentences = 'first sentence! - second sentence.  Third'
+test_text_sentences_v2 = ('Features: <ul><li>* FaceTime HD camera </li>'
+                          '<li>* Multi-touch <b>trackpad</b>. </li></ul>')
 
 
 def test_parse_string_normalize_default():
@@ -172,3 +174,83 @@ def test_text_parser_html_table():
 
     text_parser = TextParser(test_html.table_without_header_v2)
     assert text_parser.sentences == ['Height: 2; 4.', 'Width: 3; 8.']
+
+
+def test_text_parser_css_query():
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        css_query='ul'
+    )
+    expected_sentences = ['FaceTime HD camera.', 'Multi-touch trackpad.']
+    assert text_parser.sentences == expected_sentences
+
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        css_query='ul li:eq(0)'
+    )
+    assert text_parser.sentences == ['FaceTime HD camera.']
+
+
+def test_text_parser_exclude_css():
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        exclude_css='ul'
+    )
+    assert text_parser.sentences == ['Features:']
+
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        css_query='ul',
+        exclude_css='li:last'
+    )
+    assert text_parser.sentences == ['FaceTime HD camera.']
+
+
+def test_parser_merge_sentences_default():
+    text_parser = TextParser(test_text_sentences_v2)
+    expected_sentences = [
+        'Features: FaceTime HD camera.',
+        'Multi-touch trackpad.'
+    ]
+    assert text_parser.sentences == expected_sentences
+
+
+def test_parser_merge_sentences_false():
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        merge_sentences=False
+    )
+    expected_sentences = [
+        'Features:',
+        'FaceTime HD camera.',
+        'Multi-touch trackpad.'
+    ]
+    assert text_parser.sentences == expected_sentences
+
+
+def test_parser_custom_inline_breaks():
+    test_text = 'notebook > ultrabook'
+
+    text_parser = TextParser(
+        test_text,
+        inline_breaks=['>']
+    )
+    assert text_parser.sentences == ['Notebook.', 'Ultrabook.']
+
+    # Default without custom inline_breaks
+    text_parser = TextParser(test_text)
+    assert text_parser.sentences == ['Notebook > ultrabook.']
+
+
+def test_parser_split_inline_breaks_false():
+    test_text = '- notebook - ultrabook'
+
+    text_parser = TextParser(
+        test_text,
+        split_inline_breaks=False
+    )
+    assert text_parser.sentences == ['- notebook - ultrabook.']
+
+    # Default without custom inline_breaks
+    text_parser = TextParser(test_text)
+    assert text_parser.sentences == ['Notebook.', 'Ultrabook.']
