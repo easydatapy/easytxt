@@ -177,8 +177,6 @@ class TextParser(object):
     def _text_to_sentences(self):
         raw_sentences = self._text_to_raw_sentences()
 
-        raw_sentences = self._manage_raw_sentences_inline_breaks(raw_sentences)
-
         if self._merge_sentences:
             raw_sentences = sentences.merge(
                 sentences=raw_sentences,
@@ -209,7 +207,9 @@ class TextParser(object):
 
         return sentences.from_text(
             text=raw_text,
-            language=self._language
+            language=self._language,
+            split_inline_breaks=self._split_inline_breaks,
+            inline_breaks=self._inline_breaks
         )
 
     def _html_table_to_raw_sentences(self):
@@ -222,21 +222,6 @@ class TextParser(object):
             feature = '{}: {}'.format(feature_key, feature_value)
 
             raw_sentences.append(feature)
-
-        return raw_sentences
-
-    def _manage_raw_sentences_inline_breaks(
-            self,
-            raw_sentences: List[str]
-    ) -> List[str]:
-
-        if self._split_inline_breaks:
-            raw_sentences = sentences.split_inline_breaks_to_sentences(
-                sentences=raw_sentences,
-                inline_breaks=self._inline_breaks
-            )
-
-        raw_sentences = sentences.remove_empty(raw_sentences)
 
         return raw_sentences
 
