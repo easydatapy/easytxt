@@ -86,33 +86,20 @@ def split_inline_breaks_to_sentences(
         sentences: list,
         inline_breaks: Optional[List[str]] = None
 ):
-
     if inline_breaks is None:
         inline_breaks = constants.INLINE_BREAKS
     else:
         inline_breaks += constants.INLINE_BREAKS
 
-    inline_breaks_re = u'({})'.format('|'.join(inline_breaks))
+    inline_breaks_re = u'{}'.format('|'.join(inline_breaks))
 
     new_sentences = []
 
     for sentence in sentences:
         new_sentences = new_sentences + re.split(inline_breaks_re, sentence)
 
-    return [new_sentence.strip() for new_sentence in new_sentences]
-
-
-def remove_inline_breaks(
-        sentences: List[str],
-        inline_breaks: Optional[List[str]] = None
-) -> List[str]:
-
-    if inline_breaks is None:
-        inline_breaks = constants.INLINE_BREAKS
-    else:
-        inline_breaks += constants.INLINE_BREAKS
-
-    return [utext.remove_inline_breaks(s, inline_breaks) for s in sentences]
+    return [new_sentence.strip() for new_sentence in new_sentences
+            if new_sentence.strip()]
 
 
 def remove_empty(sentences: list) -> List[str]:
