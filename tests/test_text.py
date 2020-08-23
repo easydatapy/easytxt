@@ -123,3 +123,8 @@ def test_to_list_multiply_keys() -> None:
         ('-one-', ['-one-', '-two-', '-three-'])
     ]
     assert text.to_list(test_text, multiply_keys=multiply_keys) == expect_list
+
+
+def test_remove_inline_breaks():
+    test_text = '* camera'
+    assert text.remove_inline_breaks(test_text, ['*']) == 'camera'

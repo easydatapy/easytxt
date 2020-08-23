@@ -1,19 +1,13 @@
 from easytxt import sentences
 
-from tests.factory import sentences_samples
+from tests.factory import raw_sentences_samples
 
 
-# def test_from_text() -> None:
-#     for assert_paragraph in text_to_sentences_samples.english:
-#         paragraph, test_sentences = assert_paragraph
-#
-#         assert sentences.from_text(paragraph) == test_sentences
-#
-#
-# def test_from_text_normalize() -> None:
-#     paragraph = 'uÌˆnicode. HTML entities &lt;3!'
-#     final_sentences = sentences.from_text(paragraph, normalize=False)
-#     assert final_sentences == ['UÌˆnicode.', 'HTML entities &lt;3!']
+def test_from_text() -> None:
+    for assert_paragraph in raw_sentences_samples.english:
+        paragraph, test_sentences = assert_paragraph
+
+        assert sentences.from_text(paragraph) == test_sentences
 
 
 def test_merge() -> None:
@@ -97,3 +91,9 @@ def test_to_text_custom_separator() -> None:
     test_sentences = ['Hello John.', 'Where have you been?', 'I am hungry!']
     paragraph = 'Hello John. | Where have you been? | I am hungry!'
     assert sentences.to_text(test_sentences, ' | ') == paragraph
+
+
+def test_split_inline_breaks_to_sentences() -> None:
+    test_text = ['* notebook * ultrabook']
+    result = sentences.split_inline_breaks_to_sentences(test_text)
+    assert result == ['notebook', 'ultrabook']
