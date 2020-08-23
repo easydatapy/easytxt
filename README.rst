@@ -272,6 +272,7 @@ In this example lets normalize text with bad encoding.
     Easybook Pro 13 <3 ünicode
 
 Floats, integers will get transformed to string automatically.
+
     >>> test_int = 123
     >>> parse_string(test_text)
     '123'
@@ -318,7 +319,7 @@ Lets specify split index through tuple.
 
 **split_keys**
 
-``split_keys`` work in a same way as ``split_keys`` but instead of single
+``split_keys`` work in a same way as ``split_key`` but instead of single
 split key it accepts list of keys.
 
 
