@@ -250,6 +250,10 @@ their usage.*
 
 Non documented parameters are:
 
+* replace_keys
+* remove_keys
+* replace_keys_raw_text
+* remove_keys_raw_text
 * merge_sentences
 * merge_keys
 * feature_split_keys
@@ -294,15 +298,25 @@ parameter to ``False`` to disable normalization.
     >>> parse_string(test_text)
     Easybook Pro 13 &lt;3 uÌˆnicode
 
-**replace_chars**
+**replace_keys**
 
 We can replace chars/words in a string through ``replace_chars`` parameter.
 ``replace_chars`` can accept regex pattern as a lookup key and is not
-case sensetive.
+case sensitive.
 
     >>> test_text = 'Easybook Pro 15'
-    >>> parse_string(test_text, replace_chars=[('pro', 'Air'), ('15', '13')])
+    >>> parse_string(test_text, replace_keys=[('pro', 'Air'), ('15', '13')])
     Easybook Air 13
+
+**remove_keys**
+
+We can remove chars/words in a string through ``remove_keys`` parameter.
+``remove_keys`` can accept regex pattern as a lookup key and is not
+case sensitive.
+
+    >>> test_text = 'Easybook Pro 15'
+    >>> parse_string(test_text, remove_keys=['easy', 'pro'])
+    book 15
 
 **split_key**
 

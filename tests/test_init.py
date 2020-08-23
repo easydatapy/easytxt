@@ -21,16 +21,25 @@ def test_parse_string_normalize_false():
     assert parsed_string == 'Easybook Pro 13 &lt;3 uÌˆnicode'
 
 
-def test_parse_string_replace_chars():
+def test_parse_string_replace_keys():
     test_text = 'Easybook Pro 15'
     parsed_string = parse_string(
         raw_text=test_text,
-        replace_chars=[
+        replace_keys=[
             ('pro', 'Air'),
             ('15', '13')
         ]
     )
     assert parsed_string == 'Easybook Air 13'
+
+
+def test_parse_string_remove_keys():
+    test_text = 'Easybook Pro 15'
+    parsed_string = parse_string(
+        raw_text=test_text,
+        remove_keys=['easy', 'pro']
+    )
+    assert parsed_string == 'book 15'
 
 
 def test_parse_string_split_key():
@@ -158,6 +167,22 @@ def test_text_parser_sentence_separator():
         sentence_separator=' | '
     )
     assert text_parser.text == 'First sentence! | Second sentence. | Third.'
+
+
+def test_text_parser_replace_keys():
+    text_parser = TextParser(
+        test_text_sentences,
+        replace_keys=[('third', 'Third sentence'), ('ence!', 'ence?')]
+    )
+    assert text_parser.text == 'First sentence? Second sentence. Third sentence.'
+
+
+def test_text_parser_remove_keys():
+    text_parser = TextParser(
+        test_text_sentences,
+        remove_keys=['sentence', '!']
+    )
+    assert text_parser.text == 'First. Second. Third.'
 
 
 def test_text_parser_html_table():

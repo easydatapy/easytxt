@@ -37,11 +37,11 @@ def replace_chars_by_key(
 
 def replace_chars_by_keys(
         text: str,
-        text_replacements: List[Tuple[str, str]]
+        replace_keys: List[Tuple[str, str]]
 ) -> str:
 
-    for replacement in text_replacements:
-        replace_key, replace_value = replacement
+    for replace_key_tuple in replace_keys:
+        replace_key, replace_value = replace_key_tuple
 
         text: str = replace_chars_by_key(
             text=text,
@@ -54,10 +54,10 @@ def replace_chars_by_keys(
 
 def remove_chars_by_keys(
         text: str,
-        remove_chars: List[str]
+        remove_keys: List[str]
 ):
 
-    text_replacements = [(rc, '') for rc in remove_chars]
+    text_replacements = [(rc, '') for rc in remove_keys]
 
     return replace_chars_by_keys(text, text_replacements)
 

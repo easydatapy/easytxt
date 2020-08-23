@@ -9,8 +9,8 @@ from easytxt import text as utext
 def parse_string(
         raw_text: Union[str, float, int, bytes],
         normalize: bool = True,
-        replace_chars: Optional[list] = None,
-        remove_chars: Optional[list] = None,
+        replace_keys: Optional[list] = None,
+        remove_keys: Optional[list] = None,
         split_key: Optional[Union[str, tuple]] = None,
         split_keys: Optional[List[Union[str, tuple]]] = None,
         fix_spaces: bool = True,
@@ -30,22 +30,22 @@ def parse_string(
             new_line_replacement=new_line_replacement
         )
 
-    if replace_chars:
+    if replace_keys:
         raw_text = utext.replace_chars_by_keys(
             text=raw_text,
-            text_replacements=replace_chars
+            replace_keys=replace_keys
+        )
+
+    if remove_keys:
+        raw_text = utext.remove_chars_by_keys(
+            text=raw_text,
+            remove_keys=remove_keys
         )
 
     if split_keys:
         raw_text = utext.from_split_keys(
             text=raw_text,
             split_keys=split_keys
-        )
-
-    if remove_chars:
-        raw_text = utext.remove_chars_by_keys(
-            text=raw_text,
-            remove_chars=remove_chars
         )
 
     return utext.normalize_spaces(raw_text)
@@ -67,6 +67,10 @@ class TextParser(object):
             callow: Optional[List[str]] = None,
             normalize: bool = True,
             capitalize: bool = True,
+            replace_keys: Optional[list] = None,
+            remove_keys: Optional[list] = None,
+            replace_keys_raw_text: Optional[list] = None,
+            remove_keys_raw_text: Optional[list] = None,
             split_inline_breaks: bool = True,
             inline_breaks: Optional[List[str]] = None,
             merge_sentences: bool = True,
@@ -86,6 +90,10 @@ class TextParser(object):
         self._callow = callow
         self._normalize = normalize
         self._capitalize = capitalize
+        self._replace_keys = replace_keys
+        self._remove_keys = remove_keys
+        self._replace_keys_raw_text = replace_keys_raw_text
+        self._remove_keys_raw_text = remove_keys_raw_text
         self._split_inline_breaks = split_inline_breaks
         self._inline_breaks = inline_breaks
         self._merge_sentences = merge_sentences
@@ -183,6 +191,18 @@ class TextParser(object):
                 merge_keys=self._merge_keys
             )
 
+        if self._replace_keys:
+            raw_sentences = sentences.replace_chars_by_keys(
+                sentences=raw_sentences,
+                replace_keys=self._replace_keys
+            )
+
+        if self._remove_keys:
+            raw_sentences = sentences.remove_chars_by_keys(
+                sentences=raw_sentences,
+                remove_keys=self._remove_keys
+            )
+
         raw_sentences = sentences.add_stop(raw_sentences)
 
         if self._capitalize:
@@ -204,6 +224,18 @@ class TextParser(object):
             raw_text = self._text
 
         raw_text = self._normalize_raw_text(raw_text)
+
+        if self._replace_keys_raw_text:
+            raw_text = utext.replace_chars_by_keys(
+                text=raw_text,
+                replace_keys=self._replace_keys_raw_text
+            )
+
+        if self._remove_keys_raw_text:
+            raw_text = utext.remove_chars_by_keys(
+                text=raw_text,
+                remove_keys=self._remove_keys_raw_text
+            )
 
         return sentences.from_text(
             text=raw_text,

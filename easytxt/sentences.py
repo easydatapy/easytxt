@@ -85,11 +85,22 @@ def capitalize_sentence(sentences: List[str]) -> List[str]:
 
 def replace_chars_by_keys(
         sentences: List[str],
-        text_replacements: list
+        replace_keys: list
 ) -> List[str]:
 
-    return [utext.replace_chars_by_keys(sentence, text_replacements)
-            for sentence in sentences]
+    sentences = [utext.replace_chars_by_keys(sentence, replace_keys)
+                 for sentence in sentences]
+    return [utext.normalize_spaces(sentence) for sentence in sentences]
+
+
+def remove_chars_by_keys(
+        sentences: List[str],
+        remove_keys: list
+) -> List[str]:
+
+    sentences = [utext.remove_chars_by_keys(sentence, remove_keys)
+                 for sentence in sentences]
+    return [utext.normalize_spaces(sentence) for sentence in sentences]
 
 
 def split_inline_breaks_to_sentences(

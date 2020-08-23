@@ -34,12 +34,22 @@ def test_capitalize() -> None:
 
 def test_replace_chars_by_keys() -> None:
     test_sentences = ['Hello John.', 'How are you?', 'Be okay!']
-    replace_key_list = [('How', 'WHERE'), ('john', 'Trevor')]
+    replace_keys = [('How', 'WHERE'), ('john', 'Trevor')]
     final_sentences = sentences.replace_chars_by_keys(
         test_sentences,
-        replace_key_list
+        replace_keys=replace_keys
     )
     assert final_sentences == ['Hello Trevor.', 'WHERE are you?', 'Be okay!']
+
+
+def test_remove_chars_by_keys() -> None:
+    test_sentences = ['Hello John.', 'How are you?', 'Be okay!']
+    remove_keys = ['John', 'Be']
+    final_sentences = sentences.remove_chars_by_keys(
+        test_sentences,
+        remove_keys=remove_keys
+    )
+    assert final_sentences == ['Hello.', 'How are you?', 'okay!']
 
 
 def test_remove_empty() -> None:
