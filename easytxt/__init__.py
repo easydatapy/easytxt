@@ -59,6 +59,7 @@ class TextParser(object):
             self,
             text: Optional[Union[str, float, int]] = None,
             language: str = 'en',
+            css_query: Optional[str] = None,
             exclude_css: Optional[Union[List[str], str]] = None,
             deny: Optional[List[str]] = None,
             cdeny: Optional[List[str]] = None,
@@ -69,6 +70,7 @@ class TextParser(object):
             split_inline_breaks: bool = True,
             inline_breaks: Optional[List[str]] = None,
             preserve_inline_breaks: bool = False,
+            merge_sentences: bool = True,
             merge_keys: Optional[List[str]] = None,
             sentence_separator: str = ' ',
             feature_split_keys: Optional[List[str]] = None,
@@ -77,6 +79,7 @@ class TextParser(object):
 
         self._text = text
         self._language = language
+        self._css_query = css_query
         self._exclude_css = exclude_css
         self._deny = deny
         self._cdeny = cdeny
@@ -87,6 +90,7 @@ class TextParser(object):
         self._split_inline_breaks = split_inline_breaks
         self._inline_breaks = inline_breaks
         self._preserve_inline_breaks = preserve_inline_breaks
+        self._merge_sentences = merge_sentences
         self._merge_keys = merge_keys
         self._sentence_separator = sentence_separator
         self._feature_split_keys = feature_split_keys
@@ -177,10 +181,11 @@ class TextParser(object):
 
         raw_sentences = self._manage_raw_sentences_inline_breaks(raw_sentences)
 
-        raw_sentences = sentences.merge(
-            sentences=raw_sentences,
-            merge_keys=self._merge_keys
-        )
+        if self._merge_sentences:
+            raw_sentences = sentences.merge(
+                sentences=raw_sentences,
+                merge_keys=self._merge_keys
+            )
 
         raw_sentences = sentences.add_stop(raw_sentences)
 
@@ -196,6 +201,7 @@ class TextParser(object):
         if self._autodetect_html and xhtml.validate(self._text):
             raw_text = xhtml.to_text(
                 html_text=self._text,
+                css_query=self._css_query,
                 exclude_css=self._exclude_css
             )
         else:
