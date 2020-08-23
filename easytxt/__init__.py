@@ -69,7 +69,6 @@ class TextParser(object):
             capitalize: bool = True,
             split_inline_breaks: bool = True,
             inline_breaks: Optional[List[str]] = None,
-            preserve_inline_breaks: bool = False,
             merge_sentences: bool = True,
             merge_keys: Optional[List[str]] = None,
             sentence_separator: str = ' ',
@@ -89,7 +88,6 @@ class TextParser(object):
         self._capitalize = capitalize
         self._split_inline_breaks = split_inline_breaks
         self._inline_breaks = inline_breaks
-        self._preserve_inline_breaks = preserve_inline_breaks
         self._merge_sentences = merge_sentences
         self._merge_keys = merge_keys
         self._sentence_separator = sentence_separator
@@ -239,12 +237,6 @@ class TextParser(object):
             )
 
         raw_sentences = sentences.remove_empty(raw_sentences)
-
-        if not self._preserve_inline_breaks:
-            raw_sentences = sentences.remove_inline_breaks(
-                sentences=raw_sentences,
-                inline_breaks=self._inline_breaks
-            )
 
         return raw_sentences
 
