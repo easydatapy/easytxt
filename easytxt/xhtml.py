@@ -8,10 +8,14 @@ from easytxt.constants import HTML_RE_VALIDATOR
 
 def to_text(
         html_text: str,
+        css_query: Optional[str] = None,
         exclude_css: Optional[Union[List[str], str]] = None,
 ) -> str:
 
     pq_object = PyQuery(html_text)
+
+    if css_query:
+        pq_object = pq_object(css_query)
 
     # remove scripts or styles otherwise there could be errors when
     # converting html to text
