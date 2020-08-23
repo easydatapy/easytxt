@@ -42,7 +42,11 @@ english = [
     ),
     (
         '''
-        <ul><li>* FaceTime HD camera </li><li>* Multi-touch trackpad. </li></ul>
+        <ul>
+            <li>* Next-generation Thunderbolt.</li>
+            <li>* FaceTime HD camera </li>
+            <li>* Multi-touch trackpad. </li>
+        </ul>
         ''',
         [
             'Next-generation Thunderbolt.',
