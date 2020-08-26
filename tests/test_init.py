@@ -243,26 +243,26 @@ def test_text_parser_exclude_css():
     assert text_parser.sentences == ['FaceTime HD camera.']
 
 
-# def test_parser_merge_sentences_default():
-#     text_parser = TextParser(test_text_sentences_v2)
-#     expected_sentences = [
-#         'Features: FaceTime HD camera.',
-#         'Multi-touch trackpad.'
-#     ]
-#     assert text_parser.sentences == expected_sentences
-#
+def test_parser_merge_sentences_default():
+    text_parser = TextParser(test_text_sentences_v2)
+    expected_sentences = [
+        'Features: FaceTime HD camera.',
+        'Multi-touch trackpad.'
+    ]
+    assert text_parser.sentences == expected_sentences
 
-# def test_parser_merge_sentences_false():
-#     text_parser = TextParser(
-#         test_text_sentences_v2,
-#         merge_sentences=False
-#     )
-#     expected_sentences = [
-#         'Features:',
-#         'FaceTime HD camera.',
-#         'Multi-touch trackpad.'
-#     ]
-#     assert text_parser.sentences == expected_sentences
+
+def test_parser_merge_sentences_false():
+    text_parser = TextParser(
+        test_text_sentences_v2,
+        merge_sentences=False
+    )
+    expected_sentences = [
+        'Features:',
+        'FaceTime HD camera.',
+        'Multi-touch trackpad.'
+    ]
+    assert text_parser.sentences == expected_sentences
 
 
 def test_parser_custom_inline_breaks():
