@@ -109,6 +109,18 @@ def test_text_parser_to_raw_features():
     assert TextParser(test_text).raw_features == expected_results
 
 
+def test_text_parser_feature_split_keys():
+    # Lets first test with default split keys
+    test_text = 'Color: Black. Material; Aluminium'
+    expected_results = [('Color', 'Black')]
+    assert TextParser(test_text).features == expected_results
+
+    # Lets add custom split keys
+    expected_results = [('Color', 'Black'), ('Material', 'Aluminium')]
+    text_parser = TextParser(test_text, feature_split_keys=[':', ';'])
+    assert text_parser.features == expected_results
+
+
 def test_text_parser_allow():
     text_parser = TextParser(
         test_text_sentences,
@@ -231,26 +243,26 @@ def test_text_parser_exclude_css():
     assert text_parser.sentences == ['FaceTime HD camera.']
 
 
-def test_parser_merge_sentences_default():
-    text_parser = TextParser(test_text_sentences_v2)
-    expected_sentences = [
-        'Features: FaceTime HD camera.',
-        'Multi-touch trackpad.'
-    ]
-    assert text_parser.sentences == expected_sentences
+# def test_parser_merge_sentences_default():
+#     text_parser = TextParser(test_text_sentences_v2)
+#     expected_sentences = [
+#         'Features: FaceTime HD camera.',
+#         'Multi-touch trackpad.'
+#     ]
+#     assert text_parser.sentences == expected_sentences
+#
 
-
-def test_parser_merge_sentences_false():
-    text_parser = TextParser(
-        test_text_sentences_v2,
-        merge_sentences=False
-    )
-    expected_sentences = [
-        'Features:',
-        'FaceTime HD camera.',
-        'Multi-touch trackpad.'
-    ]
-    assert text_parser.sentences == expected_sentences
+# def test_parser_merge_sentences_false():
+#     text_parser = TextParser(
+#         test_text_sentences_v2,
+#         merge_sentences=False
+#     )
+#     expected_sentences = [
+#         'Features:',
+#         'FaceTime HD camera.',
+#         'Multi-touch trackpad.'
+#     ]
+#     assert text_parser.sentences == expected_sentences
 
 
 def test_parser_custom_inline_breaks():

@@ -65,7 +65,9 @@ def remove_chars_by_keys(
 def has_stop_key(text: str) -> bool:
     text = text.strip()
 
-    return endswith_key(text, config.STOP_KEYS)
+    stop_keys = config.STOP_KEYS + config.STOP_KEYS_IGNORE
+
+    return endswith_key(text, stop_keys)
 
 
 def endswith_key(

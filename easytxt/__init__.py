@@ -74,7 +74,8 @@ class TextParser(object):
             split_inline_breaks: bool = True,
             inline_breaks: Optional[List[str]] = None,
             merge_sentences: bool = True,
-            merge_keys: Optional[List[str]] = None,
+            stop_keys: Optional[List[str]] = None,
+            stop_keys_ignore: Optional[List[str]] = None,
             sentence_separator: str = ' ',
             feature_split_keys: Optional[List[str]] = None,
             autodetect_html: bool = True
@@ -97,7 +98,8 @@ class TextParser(object):
         self._split_inline_breaks = split_inline_breaks
         self._inline_breaks = inline_breaks
         self._merge_sentences = merge_sentences
-        self._merge_keys = merge_keys
+        self._stop_keys = stop_keys
+        self._stop_keys_ignore = stop_keys_ignore
         self._sentence_separator = sentence_separator
         self._feature_split_keys = feature_split_keys
         self._autodetect_html = autodetect_html
@@ -188,7 +190,7 @@ class TextParser(object):
         if self._merge_sentences:
             raw_sentences = sentences.merge(
                 sentences=raw_sentences,
-                merge_keys=self._merge_keys
+                stop_keys_ignore=self._stop_keys_ignore
             )
 
         if self._replace_keys:

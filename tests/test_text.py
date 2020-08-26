@@ -63,7 +63,6 @@ def test_remove_stop_key() -> None:
     assert text.remove_stop_key('It\'s a nice world.') == 'It\'s a nice world'
     assert text.remove_stop_key('It\'s a nice world?') == 'It\'s a nice world'
     assert text.remove_stop_key('It\'s a nice world!') == 'It\'s a nice world'
-    assert text.remove_stop_key('It\'s a nice world:') == 'It\'s a nice world'
 
 
 def test_remove_stop_key_custom() -> None:

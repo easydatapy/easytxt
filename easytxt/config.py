@@ -1,6 +1,6 @@
-STOP_KEYS = ['.', '!', '?', ':']
+STOP_KEYS = ['.', '!', '?']
 
-MERGE_KEYS = ['|', ':', '-', '/']
+STOP_KEYS_IGNORE = [':', '|', ';']
 
 FEATURE_SPLIT_KEYS = [':', '|']
 

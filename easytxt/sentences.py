@@ -50,18 +50,18 @@ def from_text(
 
 def merge(
         sentences: list,
-        merge_keys: Optional[List[str]] = None
+        stop_keys_ignore: Optional[List[str]] = None
 ) -> List[str]:
 
-    if merge_keys is None:
-        merge_keys = config.MERGE_KEYS
+    if stop_keys_ignore is None:
+        stop_keys_ignore = config.STOP_KEYS_IGNORE
 
     merged_sentences = []
 
     while sentences:
         sentence = sentences.pop(0)
 
-        if sentences and utext.endswith_key(sentence, merge_keys):
+        if sentences and utext.endswith_key(sentence, stop_keys_ignore):
             next_sentence = sentences.pop(0)
 
             sentence = '{} {}'.format(sentence, next_sentence)
