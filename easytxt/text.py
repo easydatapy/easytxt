@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union, Tuple
 
 from ftfy import fix_text
 
-from easytxt import constants
+from easytxt import config
 
 
 def capitalize(text: str) -> str:
@@ -65,7 +65,7 @@ def remove_chars_by_keys(
 def has_stop_key(text: str) -> bool:
     text = text.strip()
 
-    return endswith_key(text, constants.STOP_KEYS)
+    return endswith_key(text, config.STOP_KEYS)
 
 
 def endswith_key(
@@ -96,7 +96,7 @@ def remove_stop_key(
 ) -> str:
 
     if stop_keys is None:
-        stop_keys = constants.STOP_KEYS
+        stop_keys = config.STOP_KEYS
 
     for stop_key in stop_keys:
         if text.endswith(stop_key):
@@ -201,7 +201,7 @@ def to_feature(
 ) -> Union[str, Tuple[str, str]]:
 
     if split_keys is None:
-        split_keys = constants.FEATURE_SPLIT_KEYS
+        split_keys = config.FEATURE_SPLIT_KEYS
 
     for split_key in split_keys:
         if split_key not in text:

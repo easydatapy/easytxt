@@ -1,7 +1,7 @@
 import re
 from typing import List, Optional, Union
 
-from easytxt import abbreviations, constants, text as utext
+from easytxt import abbreviations, config, text as utext
 
 
 def from_text(
@@ -54,7 +54,7 @@ def merge(
 ) -> List[str]:
 
     if merge_keys is None:
-        merge_keys = constants.MERGE_KEYS
+        merge_keys = config.MERGE_KEYS
 
     merged_sentences = []
 
@@ -108,9 +108,9 @@ def split_inline_breaks_to_sentences(
         inline_breaks: Optional[List[str]] = None
 ):
     if inline_breaks is None:
-        inline_breaks = constants.INLINE_BREAKS
+        inline_breaks = config.INLINE_BREAKS
     else:
-        inline_breaks += constants.INLINE_BREAKS
+        inline_breaks += config.INLINE_BREAKS
 
     inline_breaks_re = u'{}'.format('|'.join(inline_breaks))
 

@@ -12,8 +12,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=[
         'ftfy',
-        'pyquery',
-        'langdetect'
+        'pyquery'
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

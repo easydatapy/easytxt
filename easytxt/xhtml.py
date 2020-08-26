@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pyquery import PyQuery
 
-from easytxt.constants import HTML_RE_VALIDATOR
+from easytxt.config import HTML_RE_VALIDATOR
 
 
 def to_text(
