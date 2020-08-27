@@ -2,7 +2,7 @@ from easytxt import TextParser
 
 from tests.factory import features_samples
 from tests.factory import sentences_samples
-from tests import test_html
+from tests.parsers import test_table
 
 features_test_text = '- color: Black - material: Aluminium'
 test_text_sentences = 'first sentence! - second sentence.  Third'
@@ -268,18 +268,18 @@ def test_text_parser_stop_keys_split():
 
 
 def test_text_parser_html_table():
-    text_parser = TextParser(test_html.table_without_header_v3)
+    text_parser = TextParser(test_table.table_without_header_v3)
     expected_results = ['Type: Easybook Pro.', 'Operating system: etOS.']
     assert text_parser.sentences == expected_results
 
-    text_parser = TextParser(test_html.table_with_header)
+    text_parser = TextParser(test_table.table_with_header)
     expected_results = [
         'Height/Width/Depth: 10/12/5.',
         'Height/Width/Depth: 2/3/5.'
     ]
     assert text_parser.sentences == expected_results
 
-    text_parser = TextParser(test_html.table_without_header_v2)
+    text_parser = TextParser(test_table.table_without_header_v2)
     assert text_parser.sentences == ['Height: 2; 4.', 'Width: 3; 8.']
 
     # Check if text with no html table returns empty string
