@@ -1,34 +1,73 @@
 import re
 from typing import List, Optional, Union
 
+from lxml import etree
 from pyquery import PyQuery
 
-from easytxt.config import HTML_RE_VALIDATOR
+from easytxt.config import HTML_RE_VALIDATOR, INLINE_TAGS
 
 
-def to_text(
+def to_sentences(
         html_text: str,
         css_query: Optional[str] = None,
         exclude_css: Optional[Union[List[str], str]] = None,
-) -> str:
+        max_chars: int = 1
+) -> List[str]:
 
     pq_object = PyQuery(html_text)
 
     if css_query:
         pq_object = pq_object(css_query)
 
-    # remove scripts or styles otherwise there could be errors when
+    # remove scripts and styles otherwise there could be errors when
     # converting html to text
-    pq_object = pq_object.clone().remove('script').remove('style')
+    pq_object.remove('script')
+    pq_object.remove('style')
 
     if exclude_css:
         if isinstance(exclude_css, str):
             exclude_css = [exclude_css]
 
         for exclude_css_selector in exclude_css:
-            pq_object = pq_object.remove(exclude_css_selector)
+            pq_object.remove(exclude_css_selector)
 
-    return pq_object.text()
+    return to_raw_sentences(
+        html_text=pq_object,
+        max_chars=max_chars
+    )
+
+
+def to_pq(html_text: Union[str, PyQuery]) -> PyQuery:
+    if isinstance(html_text, PyQuery):
+        return html_text
+    else:
+        return PyQuery(html_text)
+
+
+def to_raw_sentences(
+        html_text: Union[str, PyQuery],
+        max_chars: int = 1
+) -> List[str]:
+
+    pq = to_pq(html_text)
+
+    if not pq.text():
+        return []
+
+    # Easier to additionally split sentences later on with sentence.from_text
+    # than to do it here since in some cases split doesn't always work
+    pq('br').replaceWith('\n')
+
+    raw_sentences = []
+
+    if _pq_has_only_inline_tags(pq):
+        inline_raw_sentences = _pq_content_to_sentences(pq)
+
+        raw_sentences.append(' '.join(inline_raw_sentences))
+    else:
+        raw_sentences += _pq_content_to_sentences(pq, raw_sentences)
+
+    return [rs for rs in raw_sentences if rs and len(rs.strip()) > max_chars]
 
 
 def validate(text: str) -> bool:
@@ -39,10 +78,50 @@ def validate_html_table(text: str) -> bool:
     return bool(re.search('(<th>|<td>)', text, re.IGNORECASE))
 
 
+def _pq_content_to_sentences(
+        pq: PyQuery,
+        raw_sentences: Optional[List[str]] = None
+) -> List[str]:
+
+    if not raw_sentences:
+        raw_sentences = []
+
+    for el in pq.contents():
+        if isinstance(el, etree._Element) and _has_table_tag(el.tag):
+            if el.tag != 'table':
+                table_html = pq.outer_html()
+            else:
+                table_html = PyQuery(el).outer_html()
+
+            raw_sentences += TableReader(table_html).sentences
+
+            if el.tag != 'table':
+                break
+
+        elif isinstance(el, str):
+            raw_sentences.append(el.strip())
+        elif PyQuery(el).text():
+            raw_sentences += to_raw_sentences(el)
+
+    return raw_sentences
+
+
+def _pq_has_only_inline_tags(pq: PyQuery) -> bool:
+    children_tags = [el.tag for el in pq.children()]
+    return all([tag in INLINE_TAGS for tag in children_tags])
+
+
+def _has_table_tag(tag: str) -> bool:
+    return tag in ['table', 'tr', 'td', 'th', 'tbody', 'thead']
+
+
 class TableReader(object):
+    __cached_rows: List[List[str]] = []
+
     def __init__(
             self,
-            html_text: str,
+            html_text: Optional[Union[str, PyQuery]] = None,
+            pq: Optional[PyQuery] = None,
             allow_cols: Optional[List[str]] = None,
             callow_cols: Optional[List[str]] = None,
             deny_cols: Optional[List[str]] = None,
@@ -52,13 +131,10 @@ class TableReader(object):
             skip_row_without_value: bool = True
     ):
 
-        if not html_text:
-            raise ValueError('html_text arg cannot be empty!')
-
-        if not validate(html_text):
-            raise ValueError('html_text is not valid html/xml!')
-
-        self._pq = PyQuery(html_text)
+        if isinstance(html_text, str):
+            self._pq = PyQuery(html_text)
+        else:
+            self._pq = pq
 
         self._allow_cols = allow_cols
         self._callow_cols = callow_cols
@@ -69,7 +145,7 @@ class TableReader(object):
         self._skip_row_without_value = skip_row_without_value
 
     def __iter__(self):
-        dict_iterator = self.iter_dict()
+        dict_iterator = self._iter_dict()
 
         for table_row_data in dict_iterator:
             if self._allow_cols:
@@ -105,20 +181,50 @@ class TableReader(object):
 
             yield table_row_data
 
-    def iter_dict(self):
-        list_iterator = self.iter_list()
+    def _iter_dict(self):
+        list_iterator = self._iter_list()
 
         if self._header and self.has_header():
             yield from self._iter_dict_with_header(list_iterator)
         else:
             yield from self._iter_dict_without_header(list_iterator)
 
-    def iter_list(self):
-        for tr_pq in self._pq('tr').items():
-            yield [td_pq.text() for td_pq in tr_pq('td,th').items()]
+    def _iter_list(self):
+        if not self.__cached_rows:
+            yield from self.__cached_rows
 
-    def get_header_values(self):
-        return next(self.iter_list())
+        for tr_pq in self._pq('tr').items():
+            row_data = [td_pq.text() for td_pq in tr_pq('td,th').items()]
+
+            self.__cached_rows.append(row_data)
+
+            yield row_data
+
+    @property
+    def sentences(self):
+        raw_sentences = []
+
+        for table_row_data in self.__iter__():
+            feature_key = '/'.join(table_row_data.keys())
+            feature_value = '/'.join(table_row_data.values())
+            feature = '{}: {}'.format(feature_key, feature_value)
+
+            raw_sentences.append(feature)
+
+        return raw_sentences
+
+    @property
+    def text(self):
+        raw_sentences = self.sentences
+
+        if raw_sentences:
+            return '* {}'.format(' * '.join(raw_sentences))
+
+        return ''
+
+    @property
+    def header_values(self):
+        return next(self._iter_list())
 
     def has_header(self) -> bool:
         if self._pq('tbody') and not self._pq('thead'):

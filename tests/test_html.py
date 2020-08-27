@@ -1,4 +1,4 @@
-from easytxt import xhtml
+from easytxt import html
 
 table_with_header = """
 <table>
@@ -15,6 +15,9 @@ table_with_header = """
 """
 
 table_without_header = """
+<div>
+    <p>This text should be ignored by TableReader.</p>
+</div>
 <table>
     <tr>
         <td>Height</td><td>2</td>
@@ -23,6 +26,9 @@ table_without_header = """
         <td>Width</td><td>3</td>
     </tr>
 </table>
+<div>
+    <p>This text should be ignored by TableReader.</p>
+</div>
 """
 
 table_without_header_v2 = """
@@ -43,13 +49,11 @@ table_without_header_v3 = """
 <table>
     <tbody>
         <tr>
-            <th scope="row">Type</th>
+            <td scope="row">Type</td>
             <td>Easybook Pro</td>
         </tr>
-    </tbody>
-    <tbody>
         <tr>
-            <th scope="row">Operating system</th>
+            <td scope="row">Operating system</td>
             <td>etOS</td>
         </tr>
     </tbody>
@@ -59,12 +63,13 @@ table_without_header_v3 = """
 
 def test_to_text():
     test_html_texts = [
-        ('<p>Some sentence</p>', 'Some sentence')
+        ('<p>Some sentence</p>', ['Some sentence'])
     ]
+
     for text_html_tuple in test_html_texts:
         html_text, expected_text = text_html_tuple
 
-        assert xhtml.to_text(html_text) == expected_text
+        assert html.to_sentences(html_text) == expected_text
 
 
 def test_validate():
@@ -76,7 +81,7 @@ def test_validate():
         '<title>Hallo</title>'
     ]
     for test_valid_html_text in test_valid_html_texts:
-        assert xhtml.validate(test_valid_html_text)
+        assert html.validate(test_valid_html_text)
 
 
 def test_validate_invalid():
@@ -84,21 +89,48 @@ def test_validate_invalid():
         'Some sentence'
     ]
     for test_invalid_html_text in test_invalid_html_texts:
-        assert xhtml.validate(test_invalid_html_text) is False
+        assert html.validate(test_invalid_html_text) is False
 
 
 def test_table_reader_with_header():
-    table_rows = xhtml.TableReader(table_with_header)
+    table_rows = html.TableReader(table_with_header)
     expected_results = [
         {'Height': '10', 'Width': '12', 'Depth': '5'},
         {'Height': '2', 'Width': '3', 'Depth': '5'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
+
+
+def test_table_reader_sentences():
+    table_rows = html.TableReader(table_with_header)
+    expected_results = [
+        'Height/Width/Depth: 10/12/5',
+        'Height/Width/Depth: 2/3/5'
+    ]
+    assert table_rows.sentences == expected_results
+
+
+def test_table_reader_text():
+    table_rows = html.TableReader(table_with_header)
+    expected_results = (
+        '* Height/Width/Depth: 10/12/5 '
+        '* Height/Width/Depth: 2/3/5'
+    )
+    assert table_rows.text == expected_results
+
+
+def test_table_reader_get_header_values():
+    table_rows = html.TableReader(table_with_header)
+    assert table_rows.header_values == ['Height', 'Width', 'Depth']
+
+
+def test_table_reader_has_header():
+    table_rows = html.TableReader(table_with_header)
+    assert table_rows.has_header()
 
 
 def test_table_reader_with_header_allow():
-    table_rows = xhtml.TableReader(
+    table_rows = html.TableReader(
         table_with_header,
         allow_cols=['depth']
     )
@@ -111,7 +143,7 @@ def test_table_reader_with_header_allow():
 
 
 def test_table_reader_with_header_deny_cols():
-    table_rows = xhtml.TableReader(
+    table_rows = html.TableReader(
         table_with_header,
         deny_cols=['width']
     )
@@ -119,32 +151,29 @@ def test_table_reader_with_header_deny_cols():
         {'Height': '10', 'Depth': '5'},
         {'Height': '2', 'Depth': '5'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
 
 
 def test_table_reader_without_header():
-    table_rows = xhtml.TableReader(table_without_header)
+    table_rows = html.TableReader(table_without_header)
     expected_results = [
         {'Height': '2'},
         {'Width': '3'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
 
 
 def test_table_reader_without_header_v2():
-    table_rows = xhtml.TableReader(table_without_header_v2)
+    table_rows = html.TableReader(table_without_header_v2)
     expected_results = [
         {'Height': '2; 4'},
         {'Width': '3; 8'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
 
 
 def test_table_reader_without_header_v2_custom_separator():
-    table_rows = xhtml.TableReader(
+    table_rows = html.TableReader(
         table_without_header_v2,
         separator='|'
     )
@@ -152,12 +181,11 @@ def test_table_reader_without_header_v2_custom_separator():
         {'Height': '2|4'},
         {'Width': '3|8'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
 
 
 def test_table_reader_without_header_v2_skip_row_without_value_false():
-    table_rows = xhtml.TableReader(
+    table_rows = html.TableReader(
         table_without_header_v2,
         skip_row_without_value=False
     )
@@ -166,15 +194,13 @@ def test_table_reader_without_header_v2_skip_row_without_value_false():
         {'Height': '2; 4'},
         {'Width': '3; 8'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results
 
 
 def test_table_reader_without_header_v3():
-    table_rows = xhtml.TableReader(table_without_header_v3)
+    table_rows = html.TableReader(table_without_header_v3)
     expected_results = [
         {'Type': 'Easybook Pro'},
         {'Operating system': 'etOS'}
     ]
-    results = [table_row for table_row in table_rows]
-    assert results == expected_results
+    assert list(table_rows) == expected_results

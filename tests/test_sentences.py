@@ -28,7 +28,7 @@ def test_add_stop_custom_stop_key() -> None:
 
 def test_capitalize() -> None:
     test_sentences = ['hello John.', 'Where are you?', 'i am hungry!']
-    final_sentences = sentences.capitalize_sentence(test_sentences)
+    final_sentences = sentences.capitalize(test_sentences)
     assert final_sentences == ['Hello John.', 'Where are you?', 'I am hungry!']
 
 

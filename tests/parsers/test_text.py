@@ -1,4 +1,4 @@
-from easytxt import parse_string, TextParser
+from easytxt import TextParser
 
 from tests.factory import features_samples
 from tests.factory import sentences_samples
@@ -8,62 +8,6 @@ features_test_text = '- color: Black - material: Aluminium'
 test_text_sentences = 'first sentence! - second sentence.  Third'
 test_text_sentences_v2 = ('Features: <ul><li>* FaceTime HD camera </li>'
                           '<li>* Multi-touch <b>trackpad</b>. </li></ul>')
-
-
-def test_parse_string_normalize_default():
-    test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
-    assert parse_string(test_text) == 'Easybook Pro 13 <3 ünicode'
-
-
-def test_parse_string_normalize_false():
-    test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
-    parsed_string = parse_string(test_text, normalize=False)
-    assert parsed_string == 'Easybook Pro 13 &lt;3 uÌˆnicode'
-
-
-def test_parse_string_replace_keys():
-    test_text = 'Easybook Pro 15'
-    parsed_string = parse_string(
-        raw_text=test_text,
-        replace_keys=[
-            ('pro', 'Air'),
-            ('15', '13')
-        ]
-    )
-    assert parsed_string == 'Easybook Air 13'
-
-
-def test_parse_string_remove_keys():
-    test_text = 'Easybook Pro 15'
-    parsed_string = parse_string(
-        raw_text=test_text,
-        remove_keys=['easy', 'pro']
-    )
-    assert parsed_string == 'book 15'
-
-
-def test_parse_string_split_key():
-    test_text = 'easybook-pro_13'
-    parsed_string = parse_string(test_text, split_key='-')
-    assert parsed_string == 'easybook'
-
-    parsed_string = parse_string(
-        test_text,
-        split_key=('-', -1)  # custom index
-    )
-    assert parsed_string == 'pro_13'
-
-
-def test_parse_string_split_keys():
-    test_text = 'easybook-pro_13'
-    parsed_string = parse_string(
-        test_text,
-        split_keys=[
-            ('-', -1),
-            '_'
-        ]
-    )
-    assert parsed_string == 'pro'
 
 
 def test_text_parser_to_sentences():
@@ -173,6 +117,22 @@ def test_text_parser_capitalize_false():
     assert text_parser.text == 'first sentence! second sentence. Third.'
 
 
+def test_text_parser_lowercase_true():
+    text_parser = TextParser(
+        test_text_sentences,
+        lowercase=True
+    )
+    assert text_parser.text == 'first sentence! second sentence. third.'
+
+
+def test_text_parser_uppercase_true():
+    text_parser = TextParser(
+        test_text_sentences,
+        uppercase=True
+    )
+    assert text_parser.text == 'FIRST SENTENCE! SECOND SENTENCE. THIRD.'
+
+
 def test_text_parser_sentence_separator():
     text_parser = TextParser(
         test_text_sentences,
@@ -195,22 +155,6 @@ def test_text_parser_remove_keys():
         remove_keys=['sentence', '!']
     )
     assert text_parser.text == 'First. Second. Third.'
-
-
-def test_text_parser_html_table():
-    text_parser = TextParser(test_html.table_without_header_v3)
-    expected_results = ['Type: Easybook Pro.', 'Operating system: etOS.']
-    assert text_parser.sentences == expected_results
-
-    text_parser = TextParser(test_html.table_with_header)
-    expected_results = [
-        'Height/Width/Depth: 10/12/5.',
-        'Height/Width/Depth: 2/3/5.'
-    ]
-    assert text_parser.sentences == expected_results
-
-    text_parser = TextParser(test_html.table_without_header_v2)
-    assert text_parser.sentences == ['Height: 2; 4.', 'Width: 3; 8.']
 
 
 def test_text_parser_css_query():
@@ -291,3 +235,53 @@ def test_parser_split_inline_breaks_false():
     # Default without custom inline_breaks
     text_parser = TextParser(test_text)
     assert text_parser.sentences == ['Notebook.', 'Ultrabook.']
+
+
+def test_text_parser_stop_key():
+    test_text = '* First feature * second feature?'
+
+    # First lets test default stop key '.'
+    text_parser = TextParser(test_text)
+    assert text_parser.sentences == ['First feature.', 'Second feature?']
+
+    # Lets test custom stop key '!'
+    text_parser = TextParser(test_text, stop_key='!')
+    assert text_parser.sentences == ['First feature!', 'Second feature?']
+
+
+def test_text_parser_stop_keys_split():
+    test_text = 'First sentence: center sentence? Last sentence!'
+
+    # Lets test default stop split keys
+    text_parser = TextParser(test_text)
+    expected_result = ['First sentence: center sentence?', 'Last sentence!']
+    assert text_parser.sentences == expected_result
+
+    # Lets test custom stop split keys
+    text_parser = TextParser(
+        test_text,
+        stop_keys_split=[':', '?'],
+        stop_keys_ignore=[';']
+    )
+    expected_result = ['First sentence:', 'Center sentence?', 'Last sentence!']
+    assert text_parser.sentences == expected_result
+
+
+def test_text_parser_html_table():
+    text_parser = TextParser(test_html.table_without_header_v3)
+    expected_results = ['Type: Easybook Pro.', 'Operating system: etOS.']
+    assert text_parser.sentences == expected_results
+
+    text_parser = TextParser(test_html.table_with_header)
+    expected_results = [
+        'Height/Width/Depth: 10/12/5.',
+        'Height/Width/Depth: 2/3/5.'
+    ]
+    assert text_parser.sentences == expected_results
+
+    text_parser = TextParser(test_html.table_without_header_v2)
+    assert text_parser.sentences == ['Height: 2; 4.', 'Width: 3; 8.']
+
+    # Check if text with no html table returns empty string
+    text_parser = TextParser(test_text_sentences)
+    return text_parser == ''

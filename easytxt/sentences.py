@@ -7,16 +7,20 @@ from easytxt import abbreviations, config, text as utext
 def from_text(
         text: str,
         language: str = 'en',
+        stop_keys: Optional[List[str]] = None,
         split_inline_breaks: bool = True,
         inline_breaks: Optional[List[str]] = None,
-        min_char_len: int = 5
+        min_chars: int = 5
 ) -> List[str]:
+
+    if not stop_keys:
+        stop_keys = config.STOP_KEYS
+
+    stop_re = re.compile(r'([{}]\s+)'.format(''.join(stop_keys)))
 
     abbr_re = _get_abbr_re_pattern(language)
 
     raw_text = utext.normalize_spaces(text)
-
-    stop_re = re.compile(r'([\.\?\!]\s+)')
 
     sentences = []
 
@@ -25,7 +29,7 @@ def from_text(
     for raw_sentence in stop_re.split(raw_text):
         sentence = ''.join(text_parts)
 
-        if raw_sentence and text_parts and len(sentence) >= min_char_len:
+        if raw_sentence and text_parts and len(sentence) >= min_chars:
             if stop_re.match(text_parts[-1]) and not abbr_re.search(sentence):
                 sentences.append(sentence)
 
@@ -79,8 +83,16 @@ def add_stop(
     return [utext.add_stop_key(sentence, stop_key) for sentence in sentences]
 
 
-def capitalize_sentence(sentences: List[str]) -> List[str]:
+def capitalize(sentences: List[str]) -> List[str]:
     return [utext.capitalize(sentence) for sentence in sentences]
+
+
+def uppercase(sentences: List[str]) -> List[str]:
+    return [sentence.upper() for sentence in sentences if sentence]
+
+
+def lowercase(sentences: List[str]) -> List[str]:
+    return [sentence.lower() for sentence in sentences if sentence]
 
 
 def replace_chars_by_keys(
