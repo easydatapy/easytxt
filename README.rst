@@ -748,6 +748,7 @@ The best way to send feedback is to file an issue at
 https://github.com/sitegroove/easytxt/issues.
 
 If you are proposing a feature:
+
 * Explain in detail how it would work.
 * Keep the scope as narrow as possible, to make it easier to implement.
 * Remember that contributions are welcome :)
@@ -756,12 +757,13 @@ Pull Request Guidelines
 -----------------------
 
 Before you submit a pull request, check that it meets these guidelines:
+
 * The pull request should include tests unless PR contains only changes
-to docs.
+  to docs.
 * If the pull request adds functionality, the docs should be updated. Docs
-currently live in a README.rst file.
+  currently live in a README.rst file.
 * Follow the core developers’ advice which aim to ensure code’s consistency
-regardless of variety of approaches used by many contributors.
+  regardless of variety of approaches used by many contributors.
 * In case you are unable to continue working on a PR, please leave a short
-comment to notify us. We will be pleased to make any changes required to
-get it done.
+  comment to notify us. We will be pleased to make any changes required to
+  get it done.
