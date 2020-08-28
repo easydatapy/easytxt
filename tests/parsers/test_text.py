@@ -253,20 +253,6 @@ def test_parser_merge_sentences_false():
     assert tp.sentences == expected_sentences
 
 
-def test_parser_custom_inline_breaks():
-    test_text = 'notebook > ultrabook'
-
-    tp = parse_text(
-        test_text,
-        inline_breaks=['>']
-    )
-    assert tp.sentences == ['Notebook.', 'Ultrabook.']
-
-    # Default without custom inline_breaks
-    tp = parse_text(test_text)
-    assert tp.sentences == ['Notebook > ultrabook.']
-
-
 def test_parser_split_inline_breaks_false():
     test_text = '- notebook - ultrabook'
 
@@ -279,6 +265,20 @@ def test_parser_split_inline_breaks_false():
     # Default without custom inline_breaks
     tp = parse_text(test_text)
     assert tp.sentences == ['Notebook.', 'Ultrabook.']
+
+
+def test_parser_custom_inline_breaks():
+    test_text = 'notebook > ultrabook'
+
+    tp = parse_text(
+        test_text,
+        inline_breaks=['>']
+    )
+    assert tp.sentences == ['Notebook.', 'Ultrabook.']
+
+    # Default without custom inline_breaks
+    tp = parse_text(test_text)
+    assert tp.sentences == ['Notebook > ultrabook.']
 
 
 def test_parse_text_stop_key():
