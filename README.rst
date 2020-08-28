@@ -102,8 +102,7 @@ for sentences to be split properly around abbreviations.
     ['Primera oracion?', 'Segunda oración.', 'Tercera oración.']
 
 Please note that currently only ``en`` and ``es`` language parameter values
-are supported. *Support for more is coming soon with automatic language
-detection.*
+are supported. *Support for more is coming soon...*
 
 **css_query**
 
@@ -490,9 +489,9 @@ Custom parameters
 -----------------
 **normalize**
 
-As seen in example above text normalization (fixing spaces, bad encoding) is
+As seen in example above, text normalization (bad encoding) is
 enabled by default through ``normalize`` parameter. Lets set ``normalize``
-parameter to ``False`` to disable normalization.
+parameter to ``False`` to disable text normalization.
 
     >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
     >>> parse_string(test_text)
@@ -642,12 +641,18 @@ provide char as we can see in example bellow.
 parse_table
 ===========
 
-description coming soon ...
+``parse_table`` parses/extracts data from ``HTML`` table into various formats
+like ``dict``, ``list`` or just ordinary ``text``.
+
+Please note that ``parse_text`` already parses html tables but only in
+``list`` or ``text`` format and will extract also text from other nodes
+if ``css`` selector is not set directly on ``table`` node.
 
 Examples
 --------
 
-description coming soon ...
+In following examples we will use two tables. One with a header and one
+without it.
 
 Custom parameters
 -----------------
@@ -696,3 +701,67 @@ Dependencies
 .. _ftfy: https://pypi.org/project/ftfy
 .. _pyquery: https://pypi.org/project/pyquery
 .. _number-parser: https://pypi.org/project/number-parser
+
+Contributing
+============
+
+Contributions are welcome, and they are greatly appreciated! Every little bit
+helps, and credit will always be given.
+
+You can contribute in many ways:
+
+Report Bugs
+-----------
+
+Report bugs at https://github.com/sitegroove/easytxt/issues.
+
+If you are reporting a bug, please include:
+
+* Your operating system name and ``EasyTXT`` package version.
+* Whole text sample that is being parsed and custom parameters if being set.
+* Parsed text result in various formats ``text``, ``senteces``, ``features``.
+
+Fix Bugs
+--------
+
+Look through the GitHub issues for bugs. Anything tagged with “bug” is open
+to whoever wants to implement it.
+
+Implement Features
+------------------
+
+Look through the GitHub issues for features. Anything tagged with “feature”
+is open to whoever wants to implement it. We encourage you to add new test
+cases to existing stack.
+
+Write Documentation
+-------------------
+
+``EasyTXT`` could always use more documentation, whether as part of the
+official ``EasyTXT`` docs or even on the web in blog posts, articles,
+tutorials, and such.
+
+Submit Feedback
+---------------
+
+The best way to send feedback is to file an issue at
+https://github.com/sitegroove/easytxt/issues.
+
+If you are proposing a feature:
+* Explain in detail how it would work.
+* Keep the scope as narrow as possible, to make it easier to implement.
+* Remember that contributions are welcome :)
+
+Pull Request Guidelines
+-----------------------
+
+Before you submit a pull request, check that it meets these guidelines:
+* The pull request should include tests unless PR contains only changes
+to docs.
+* If the pull request adds functionality, the docs should be updated. Docs
+currently live in a README.rst file.
+* Follow the core developers’ advice which aim to ensure code’s consistency
+regardless of variety of approaches used by many contributors.
+* In case you are unable to continue working on a PR, please leave a short
+comment to notify us. We will be pleased to make any changes required to
+get it done.
