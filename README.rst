@@ -36,11 +36,13 @@ Please note that calling multiple formats at the same time won't affect
 performance since sentences are cached and all other formats call sentenced
 under the hood.
 
+```pycon
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
     ['First sentence...', 'Bad ünicode.', 'HTML entities <3!']
+```
 
 Lets just get normalized text.
 
