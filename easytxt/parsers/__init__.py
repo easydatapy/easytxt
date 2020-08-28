@@ -10,9 +10,9 @@ def parse_string(
         remove_keys: Optional[list] = None,
         split_key: Optional[Union[str, tuple]] = None,
         split_keys: Optional[List[Union[str, tuple]]] = None,
-        fix_spaces: bool = True,
-        escape_new_lines: bool = False,
         text_num_to_numeric: bool = False,
+        fix_spaces: bool = True,
+        escape_new_lines: bool = True,
         new_line_replacement: str = ' '
 ) -> str:
 
@@ -52,4 +52,7 @@ def parse_string(
             language=language
         )
 
-    return utext.normalize_spaces(raw_text)
+    if fix_spaces:
+        raw_text = utext.normalize_spaces(raw_text)
+
+    return raw_text

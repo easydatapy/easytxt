@@ -160,7 +160,7 @@ def normalize(
 
     text = to_str(text)
 
-    text = fix_text(text).replace('  ', ' ').strip()
+    text = fix_text(text)
 
     if escape_new_lines:
         text = normalize_new_lines(
@@ -171,7 +171,7 @@ def normalize(
     if fix_spaces:
         text = normalize_spaces(text)
 
-    return text.replace(':.', ':')
+    return text.replace(':.', ':').strip()
 
 
 def remove_inline_breaks(

@@ -362,5 +362,6 @@ Dependencies
   * ftfy_ to fix encoding.
   * pyquery_ to help with html to text conversion.
 
-.. _ftfy: https://pypi.org/project/ftfy/
-.. _pyquery: https://pypi.org/project/pyquery/
+.. _ftfy: https://pypi.org/project/ftfy
+.. _pyquery: https://pypi.org/project/pyquery
+.. _number-parser: https://pypi.org/project/number-parser

@@ -57,6 +57,39 @@ def test_parse_string_split_keys():
     assert parsed_string == 'pro'
 
 
+def test_parse_string_fix_spaces():
+    test_text = 'Easybook   Pro  15'
+    # Lets test first with default settings
+    assert parse_string(raw_text=test_text) == 'Easybook Pro 15'
+
+    parsed_string = parse_string(
+        raw_text=test_text,
+        fix_spaces=False
+    )
+    assert parsed_string == 'Easybook   Pro  15'
+
+
+def test_parse_string_escape_new_lines():
+    test_text = 'Easybook\nPro\n15'
+    # Lets test first with default settings
+    assert parse_string(raw_text=test_text) == 'Easybook Pro 15'
+
+    parsed_string = parse_string(
+        raw_text=test_text,
+        escape_new_lines=False
+    )
+    assert parsed_string == 'Easybook\nPro\n15'
+
+
+def test_parse_string_new_line_replacement():
+    test_text = 'Easybook\nPro\n15'
+    parsed_string = parse_string(
+        raw_text=test_text,
+        new_line_replacement='|'
+    )
+    assert parsed_string == 'Easybook|Pro|15'
+
+
 def test_parse_string_text_num_to_numeric():
     test_text = 'two thousand and three words for the first time'
     parsed_string = parse_string(test_text, text_num_to_numeric=True)

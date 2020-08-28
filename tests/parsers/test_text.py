@@ -285,3 +285,11 @@ def test_text_parser_html_table():
     # Check if text with no html table returns empty string
     text_parser = TextParser(test_text_sentences)
     return text_parser == ''
+
+
+def test_text_parser_text_num_to_numeric():
+    test_text = ('First Sentence. Two thousand and three has it. '
+                 'Three Sentences.')
+    expected_results = ['1 Sentence.', '2003 has it.', '3 Sentences.']
+    text_parser = TextParser(test_text, text_num_to_numeric=True)
+    assert text_parser.sentences == expected_results
