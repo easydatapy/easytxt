@@ -5,7 +5,7 @@ from lxml import etree
 from pyquery import PyQuery
 
 from easytxt.config import HTML_RE_VALIDATOR, INLINE_TAGS
-from easytxt.parsers.table import TableParser
+from easytxt import TableParser
 
 
 def to_sentences(
@@ -32,20 +32,20 @@ def to_sentences(
         for exclude_css_selector in exclude_css:
             pq_object.remove(exclude_css_selector)
 
-    return to_raw_sentences(
+    raw_sentences = _to_raw_sentences(
         html_text=pq_object,
         max_chars=max_chars
     )
 
+    sentences = []
 
-def to_pq(html_text: Union[str, PyQuery]) -> PyQuery:
-    if isinstance(html_text, PyQuery):
-        return html_text
-    else:
-        return PyQuery(html_text)
+    for raw_sentence in raw_sentences:
+        sentences += raw_sentence.split('<break>')
+
+    return sentences
 
 
-def to_raw_sentences(
+def _to_raw_sentences(
         html_text: Union[str, PyQuery],
         max_chars: int = 1
 ) -> List[str]:
@@ -54,10 +54,6 @@ def to_raw_sentences(
 
     if not pq.text():
         return []
-
-    # Easier to additionally split sentences later on with sentence.from_text
-    # than to do it here since in some cases split doesn't always work
-    pq('br').replaceWith('\n')
 
     raw_sentences = []
 
@@ -79,6 +75,13 @@ def validate_html_table(text: str) -> bool:
     return bool(re.search('(<th>|<td>)', text, re.IGNORECASE))
 
 
+def to_pq(html_text: Union[str, PyQuery]) -> PyQuery:
+    if isinstance(html_text, PyQuery):
+        return html_text
+    else:
+        return PyQuery(html_text)
+
+
 def _pq_content_to_sentences(
         pq: PyQuery,
         raw_sentences: Optional[List[str]] = None
@@ -88,6 +91,9 @@ def _pq_content_to_sentences(
         raw_sentences = []
 
     for el in pq.contents():
+        if isinstance(el, etree._Element) and el.tag == 'br':
+            el = '<break>'
+
         if isinstance(el, etree._Element) and _has_table_tag(el.tag):
             if el.tag != 'table':
                 table_html = pq.outer_html()
@@ -102,7 +108,7 @@ def _pq_content_to_sentences(
         elif isinstance(el, str):
             raw_sentences.append(el.strip())
         elif PyQuery(el).text():
-            raw_sentences += to_raw_sentences(el)
+            raw_sentences += _to_raw_sentences(el)
 
     return raw_sentences
 

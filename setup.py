@@ -12,7 +12,8 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=[
         'ftfy',
-        'pyquery'
+        'pyquery',
+        'number-parser'
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

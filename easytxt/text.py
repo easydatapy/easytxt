@@ -2,6 +2,7 @@ import re
 from typing import Any, List, Optional, Union, Tuple
 
 from ftfy import fix_text
+from number_parser import parse
 
 from easytxt import config
 
@@ -263,6 +264,10 @@ def to_str(
         value = str(value)
 
     return value
+
+
+def to_numeric_from_text_num(text: str, language='en'):
+    return parse(text, language=language)
 
 
 def to_list(

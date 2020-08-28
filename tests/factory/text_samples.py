@@ -19,7 +19,7 @@ english = [
     ),
     (
         ('Lorem ipsum dolor sit amet... Consectetur adipiscing sed do. '
-         '* tempor incididunt ut-labore  .   <li>So be <b>it</b>!</li>'),
+         '* tempor incididunt ut-labore  . <br>  <li>So be <b>it</b>!</li>'),
         ('Lorem ipsum dolor sit amet... Consectetur adipiscing sed do. '
          'Tempor incididunt ut-labore. So be it!')
     )

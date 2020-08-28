@@ -37,6 +37,7 @@ class TextParser:
             stop_keys_ignore: Optional[List[str]] = None,
             sentence_separator: str = ' ',
             feature_split_keys: Optional[List[str]] = None,
+            text_num_to_numeric: bool = False,
             autodetect_html: bool = True
     ):
 
@@ -65,8 +66,8 @@ class TextParser:
         self._stop_keys_ignore = stop_keys_ignore
         self._sentence_separator = sentence_separator
         self._feature_split_keys = feature_split_keys
+        self._text_num_to_numeric = text_num_to_numeric
         self._autodetect_html = autodetect_html
-
 
     def __iter__(self):
         for sentence in self.sentences:
@@ -150,8 +151,10 @@ class TextParser:
 
     def _text_to_sentences(self):
         if self._autodetect_html and html.validate(self._text):
+            raw_text = self._manage_keys_raw_text(self._text)
+
             html_raw_sentences = html.to_sentences(
-                html_text=self._text,
+                html_text=raw_text,
                 css_query=self._css_query,
                 exclude_css=self._exclude_css
             )
@@ -193,22 +196,17 @@ class TextParser:
 
         raw_sentences = self._sentences_manage_case(raw_sentences)
 
+        if self._text_num_to_numeric:
+            raw_sentences = self._convert_text_num_to_numeric_in_sentences(
+                raw_sentences
+            )
+
         return raw_sentences
 
     def _text_to_raw_sentences(self, raw_text: str) -> List[str]:
         raw_text = self._normalize_raw_text(raw_text)
 
-        if self._replace_keys_raw_text:
-            raw_text = utext.replace_chars_by_keys(
-                text=raw_text,
-                replace_keys=self._replace_keys_raw_text
-            )
-
-        if self._remove_keys_raw_text:
-            raw_text = utext.remove_chars_by_keys(
-                text=raw_text,
-                remove_keys=self._remove_keys_raw_text
-            )
+        raw_text = self._manage_keys_raw_text(raw_text)
 
         return sentences.from_text(
             text=raw_text,
@@ -261,3 +259,28 @@ class TextParser:
             raw_sentences = sentences.capitalize(raw_sentences)
 
         return raw_sentences
+
+    def _convert_text_num_to_numeric_in_sentences(
+            self,
+            raw_sentences: List[str]
+    ) -> List[str]:
+
+        return [
+            utext.to_numeric_from_text_num(rs, language=self._language)
+            for rs in raw_sentences
+        ]
+
+    def _manage_keys_raw_text(self, raw_text: str):
+        if self._replace_keys_raw_text:
+            raw_text = utext.replace_chars_by_keys(
+                text=raw_text,
+                replace_keys=self._replace_keys_raw_text
+            )
+
+        if self._remove_keys_raw_text:
+            raw_text = utext.remove_chars_by_keys(
+                text=raw_text,
+                remove_keys=self._remove_keys_raw_text
+            )
+
+        return raw_text

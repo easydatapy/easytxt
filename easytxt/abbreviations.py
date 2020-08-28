@@ -9,7 +9,7 @@ en = [
     'Messrs', 'Mlle', 'Mme', 'Mr', 'Mrs', 'Ms', 'Msgr', 'Op', 'Ord',
     'Pfc', 'Ph', 'Prof', 'Pvt', 'Rep', 'Reps', 'Res', 'Rev', 'Rt', 'Sen',
     'Sens', 'Sfc', 'Sgt', 'Sr', 'St', 'Supt', 'Surg', 'vs', 'i.e',
-    'rev', 'e.g', 'No', 'Nos', 'Art', 'Nr', '[a-z]', '[0-9]+'
+    'rev', 'e.g', 'No', 'Nos', 'Art', 'Nr', '[a-z]'
 ]
 
 es = [
@@ -19,7 +19,6 @@ es = [
     'ed', 'pa?g', 'cod', 'prof', 'op', 'plan', 'edf?', 'func', 'ch',
     'arts?', 'artigs?', 'artg', 'pars?', 'rel', 'tel', 'res', '[a-z]',
     'vls?', 'gab', 'bel', 'ilm[oa]', 'parc', 'proc', 'adv', 'vols?',
-    'cels?', 'pp', 'ex[ao]', 'eg', 'pl', 'ref', '[0-9]+', 'reg',
-    'f[ilí]s?', 'inc', 'par', 'alin', 'fts', 'publ?', 'ex', 'v. em',
-    'v.rev'
+    'cels?', 'pp', 'ex[ao]', 'eg', 'pl', 'ref', 'reg', 'f[ilí]s?', 'inc',
+    'par', 'alin', 'fts', 'publ?', 'ex', 'v. em', 'v.rev'
 ]

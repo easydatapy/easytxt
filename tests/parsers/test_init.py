@@ -55,3 +55,9 @@ def test_parse_string_split_keys():
         ]
     )
     assert parsed_string == 'pro'
+
+
+def test_parse_string_text_num_to_numeric():
+    test_text = 'two thousand and three words for the first time'
+    parsed_string = parse_string(test_text, text_num_to_numeric=True)
+    assert parsed_string == '2003 words for the 1 time'
