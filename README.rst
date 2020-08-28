@@ -307,11 +307,11 @@ We can remove all chars in sentences by providing list keys in a
 
 **replace_keys_raw_text**
 
-description coming soon ...
+examples coming soon ...
 
 **remove_keys_raw_text**
 
-description coming soon ...
+examples coming soon ...
 
 **split_inline_breaks**
 
@@ -351,21 +351,27 @@ Regex pattern is also supported as parameter value:
 
     >>> parse_text(test_text, inline_breaks=[r'\b>'])
 
-**merge_sentences**
-
-description coming soon ...
-
 **stop_key**
 
-description coming soon ...
+If a sentence is without a stop key at the end, then by default it
+will automatically be appended ``.``. Let see this in bellow example:
 
-**stop_keys_split**
+    >>> test_text = 'First feature <br> second feature?'
+    >>> pt = parse_text(test_text)
+    >>> pt.sentences
+    ['First feature.', 'Second feature?']
 
-description coming soon ...
+We can change our default char ``.`` to a custom one by setting our
+desired char in a ``stop_key`` parameter.
+
+    >>> test_text = 'First feature <br> second feature?'
+    >>> pt = parse_text(test_text, stop_key='!')
+    >>> pt.sentences
+    ['First feature!', 'Second feature?']
 
 **stop_keys_ignore**
 
-description coming soon ...
+examples coming soon ...
 
 **sentence_separator**
 
@@ -387,17 +393,13 @@ custom one.
     >>> pt.text
     First sentence? > Second sentence. > Third sentence.
 
-**feature_split_keys**
-
-description coming soon ..
-
 **text_num_to_numeric**
 
-description coming soon ..
+examples coming soon ..
 
 **autodetect_html**
 
-description coming soon ..
+examples coming soon ..
 
 Invoked methods
 ---------------
@@ -498,15 +500,30 @@ parameter to ``False`` to disable normalization.
 
 **capitalize**
 
-description coming soon ...
+We can capitalize first character in our string if needed by setting
+``capitalize`` parameter to ``True``. By default is set to ``False``.
+
+    >>> test_text = 'easybook PRO 15'
+    >>> parse_string(test_text, capitalize=True)
+    Easybook PRO 15
 
 **uppercase**
 
-description coming soon ...
+We can set all chars in our string to uppercase by setting ``uppercase``
+parameter to ``True``.
+
+    >>> test_text = 'easybook PRO 15'
+    >>> parse_string(test_text, uppercase=True)
+    EASYBOOK PRO 15
 
 **lowercase**
 
-description coming soon ...
+We can set all chars in our string to lowercase by setting ``lowercase``
+parameter to ``True``.
+
+    >>> test_text = 'easybook PRO 15'
+    >>> parse_string(test_text, lowercase=True)
+    easybook pro 15
 
 **replace_keys**
 
@@ -554,28 +571,73 @@ split key it accepts list of keys.
 
 **text_num_to_numeric**
 
-description coming soon ...
+We can convert all alpha chars that describe numeric values to actual
+numbers by setting ``text_num_to_numeric`` parameter to ``True``.
 
-**language**
+    >>> test_text = 'two thousand and three words for the first time'
+    >>> parse_string(test_text, text_num_to_numeric=True)
+    2003 words for the 1 time
 
-Language parameter is only used if ``text_num_to_numeric`` parameter is set
-to ``True``. Currently supported languages are only ``en, es, hi and ru``.
+If our text is in different language we need to change language value in
+our ``language`` parameter. Currently supported languages are only
+``en, es, hi and ru``.
 
 **fix_spaces**
 
-description coming soon ...
+By default all multiple spaces will be removed and left with only single
+one between chars. Lets test it in our bellow example:
+
+    >>> test_text = 'Easybook   Pro  15'
+    >>> parse_string(test_text)
+    Easybook Pro 15
+
+Now lets change ``fix_spaces`` parameter to ``False`` and see what happens.
+
+    >>> test_text = 'Easybook   Pro  15'
+    >>> parse_string(test_text, fix_spaces=False)
+    Easybook   Pro  15
 
 **escape_new_lines**
 
-description coming soon ...
+By default all new line characters are converted to empty space as we can
+see in example bellow:
+
+    >>> test_text = 'Easybook\nPro\n15'
+    >>> parse_string(test_text)
+    Easybook Pro 15
+
+Now lets change ``escape_new_lines`` parameter to ``False`` and see what happens.
+
+    >>> test_text = 'Easybook\nPro\n15'
+    >>> parse_string(test_text, escape_new_lines=False)
+    Easybook\nPro\n15
 
 **new_line_replacement**
 
-description coming soon ...
+If ``escape_new_lines`` is set to ``True``, then by default all new line chars
+will be replaced by ``' '`` as seen in upper example. We can change this
+default setting by changing value of ``new_line_replacement`` parameter.
+
+    >>> test_text = 'Easybook\nPro\n15'
+    >>> parse_string(test_text, new_line_replacement='<br>')
+    Easybook<br>Pro<br>15
 
 **add_stop**
 
-description coming soon ...
+We can add stop char at the end of the string by setting ``add_stop``
+parameter to ``True``.
+
+    >>> test_text = 'Easybook Pro  15'
+    >>> parse_string(test_text, add_stop=True)
+    Easybook Pro 15.
+
+By default ``.`` is added but we can provide our custom char if needed. Instead
+of setting ``add_stop`` parameter to ``True``, we can instead of boolean value
+provide char as we can see in example bellow.
+
+    >>> test_text = 'Easybook Pro  15'
+    >>> parse_string(test_text, add_stop='!')
+    Easybook Pro 15!
 
 parse_table
 ===========
