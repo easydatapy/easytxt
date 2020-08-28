@@ -767,3 +767,7 @@ Before you submit a pull request, check that it meets these guidelines:
 * In case you are unable to continue working on a PR, please leave a short
   comment to notify us. We will be pleased to make any changes required to
   get it done.
+
+
+Note: *Contributing section was heavily inspired by dateparser package
+contributing guidelines.*
