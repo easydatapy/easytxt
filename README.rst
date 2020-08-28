@@ -151,19 +151,58 @@ are case sensitive. Regex pattern as key is also supported.
 
 **from_allow**
 
-description coming soon ...
+We can skip sentences by providing keys in ``from_allow`` parameter.
+Regex pattern as key is also supported.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, from_allow=['second'])
+    >>> pt.sentences
+    ['Second txt.', 'Third Txt.', 'FOUR txt.']
 
 **from_callow**
 
-description coming soon ...
+``from_callow`` is similar to ``from_allow`` but with exception that
+provided keys are case sensitive. Regex pattern as key is also supported.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, from_callow=['Second'])
+    >>> pt.sentences
+    ['Second txt.', 'Third Txt.', 'FOUR txt.']
+
+Lets recreate same example as before but with lowercase key.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, from_callow=['second'])
+    >>> pt.sentences
+    []
 
 **to_allow**
 
-description coming soon ...
+``to_allow`` is similar to ``from_allow`` but in reverse order. Here
+are sentences skipped after provided key is found. Regex pattern as key
+is also supported.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, to_allow=['four'])
+    >>> pt.sentences
+    ['First txt.', 'Second txt.', 'Third Txt.']
 
 **to_callow**
 
-description coming soon ...
+``to_callow`` is similar to ``to_allow`` but with exception that
+provided keys are case sensitive. Regex pattern as key is also supported.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, to_callow=['FOUR'])
+    >>> pt.sentences
+    ['First txt.', 'Second txt.', 'Third Txt.']
+
+Lets recreate same example as before but with lowercase key.
+
+    >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
+    >>> pt = parse_text(test_text, to_callow=['four'])
+    >>> pt.sentences
+    ['First txt.', 'Second txt.', 'Third Txt.', 'FOUR txt.']
 
 **deny**
 
@@ -187,7 +226,23 @@ are case sensitive. Regex pattern as key is also supported.
 
 **normalize**
 
-description coming soon ...
+By default parameter ``normalize`` is set to ``True``. This means that any
+bad encoding will be automatically fixed, stops added and line breaks
+split into sentences.
+
+    >>> from easytxt import parse_text
+    >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
+    >>> pt = parse_text(test_text)
+    >>> pt.sentences
+    ['First sentence...', 'Bad ünicode.', 'HTML entities <3!']
+
+Lets try to set parameter ``normalize`` to ``False`` and see what happens.
+
+    >>> from easytxt import parse_text
+    >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
+    >>> pt = parse_text(test_text, normalize=False)
+    >>> pt.sentences
+    ['First sentence...', 'Bad uÌˆnicode.', 'HTML entities &lt;3!']
 
 **capitalize**
 
@@ -198,7 +253,7 @@ By default all sentences will get capitalized as we can see bellow.
     >>> pt.sentences
     ['First sentence?', 'Second sentence.', 'Third sentence.']
 
-We can disable this behaviour by settings parameter ``capitalize`` to ``False``.
+We can disable this behaviour by setting parameter ``capitalize`` to ``False``.
 
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text, capitalize=False)
@@ -207,11 +262,23 @@ We can disable this behaviour by settings parameter ``capitalize`` to ``False``.
 
 **uppercase**
 
-description coming soon ...
+We can set our text output to uppercase by setting parameter ``uppercase``
+to ``True``.
+
+    >>> test_text = 'first sentence? Second sentence. third sentence'
+    >>> pt = parse_text(test_text, capitalize=False)
+    >>> pt.sentences
+    ['FIRST SENTENCE?', 'SECOND SENTENCE.', 'THIRD SENTENCE.']
 
 **lowercase**
 
-description coming soon ...
+We can set our text output to lowercase by setting parameter ``lowercase``
+to ``True``.
+
+    >>> test_text = 'first sentence? Second sentence. third sentence'
+    >>> pt = parse_text(test_text, capitalize=False)
+    >>> pt.text
+    'first sentence? second sentence. third sentence'
 
 **min_chars**
 
@@ -219,11 +286,24 @@ description coming soon ...
 
 **replace_keys**
 
-description coming soon ...
+We can replace all chars in sentences by providing tuple of key and
+replacement char in a ``replace_keys`` parameter. Regex pattern as key is
+also supported.
+
+    >>> test_text = 'first sentence! - second sentence.  Third'
+    >>> pt = parse_text(test_text, replace_keys=[('third', 'Last'), ('nce!', 'nce?')])
+    >>> pt.sentences
+    ['First sentence?', 'Second sentence.', 'Last.']
 
 **remove_keys**
 
-description coming soon ...
+We can remove all chars in sentences by providing list keys in a
+``replace_keys`` parameter. Regex pattern as key is also supported.
+
+    >>> test_text = 'first sentence! - second sentence.  Third'
+    >>> pt = parse_text(test_text, remove_keys=['sentence', '!'])
+    >>> pt.sentences
+    ['First.', 'Second.', 'Third.']
 
 **replace_keys_raw_text**
 

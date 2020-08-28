@@ -231,7 +231,7 @@ def test_parse_text_exclude_css():
     assert tp.sentences == ['FaceTime HD camera.']
 
 
-def test_parser_merge_sentences_default():
+def test_parser_text_merge_sentences_default():
     tp = parse_text(test_text_sentences_v2)
     expected_sentences = [
         'Features: FaceTime HD camera.',
@@ -240,7 +240,7 @@ def test_parser_merge_sentences_default():
     assert tp.sentences == expected_sentences
 
 
-def test_parser_merge_sentences_false():
+def test_parser_text_merge_sentences_false():
     tp = parse_text(
         test_text_sentences_v2,
         merge_sentences=False
@@ -253,7 +253,7 @@ def test_parser_merge_sentences_false():
     assert tp.sentences == expected_sentences
 
 
-def test_parser_split_inline_breaks_false():
+def test_parser_text_split_inline_breaks_false():
     test_text = '- notebook - ultrabook'
 
     tp = parse_text(
