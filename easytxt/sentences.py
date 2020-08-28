@@ -140,7 +140,7 @@ def remove_empty(sentences: list) -> List[str]:
 
 
 def allow_contains(
-        sentences: list,
+        sentences: List[str],
         keys=Union[List[str], str],
         case_sensitive: bool = False
 ) -> List[str]:
@@ -149,8 +149,43 @@ def allow_contains(
             if utext.contains(sentence, keys, case_sensitive)]
 
 
+def from_allow_contains(
+        sentences: List[str],
+        keys=Union[List[str], str],
+        case_sensitive: bool = False
+):
+
+    allowed_sentences = []
+
+    for sentence in sentences:
+        if allowed_sentences:
+            allowed_sentences.append(sentence)
+        else:
+            if utext.contains(sentence, keys, case_sensitive):
+                allowed_sentences.append(sentence)
+
+    return allowed_sentences
+
+
+def to_allow_contains(
+        sentences: List[str],
+        keys=Union[List[str], str],
+        case_sensitive: bool = False
+):
+
+    allowed_sentences = []
+
+    for sentence in sentences:
+        if utext.contains(sentence, keys, case_sensitive):
+            break
+
+        allowed_sentences.append(sentence)
+
+    return allowed_sentences
+
+
 def deny_contains(
-        sentences: list,
+        sentences: List[str],
         keys=Union[List[str], str],
         case_sensitive: bool = False
 ) -> List[str]:

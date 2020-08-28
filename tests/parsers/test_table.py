@@ -1,4 +1,4 @@
-from easytxt import TableParser
+from easytxt import parse_table
 
 table_with_header = """
 <table>
@@ -61,8 +61,8 @@ table_without_header_v3 = """
 """
 
 
-def test_table_parser_with_header():
-    table_rows = TableParser(table_with_header)
+def test_parse_table_with_header():
+    table_rows = parse_table(table_with_header)
     expected_results = [
         {'Height': '10', 'Width': '12', 'Depth': '5'},
         {'Height': '2', 'Width': '3', 'Depth': '5'}
@@ -70,8 +70,8 @@ def test_table_parser_with_header():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_sentences():
-    table_rows = TableParser(table_with_header)
+def test_parse_table_sentences():
+    table_rows = parse_table(table_with_header)
     expected_results = [
         'Height/Width/Depth: 10/12/5',
         'Height/Width/Depth: 2/3/5'
@@ -79,8 +79,8 @@ def test_table_parser_sentences():
     assert table_rows.sentences == expected_results
 
 
-def test_table_parser_text():
-    table_rows = TableParser(table_with_header)
+def test_parse_table_text():
+    table_rows = parse_table(table_with_header)
     expected_results = (
         '* Height/Width/Depth: 10/12/5 '
         '* Height/Width/Depth: 2/3/5'
@@ -88,18 +88,18 @@ def test_table_parser_text():
     assert table_rows.text == expected_results
 
 
-def test_table_parser_get_header_values():
-    table_rows = TableParser(table_with_header)
+def test_parse_table_get_header_values():
+    table_rows = parse_table(table_with_header)
     assert table_rows.header_values == ['Height', 'Width', 'Depth']
 
 
-def test_table_parser_has_header():
-    table_rows = TableParser(table_with_header)
+def test_parse_table_has_header():
+    table_rows = parse_table(table_with_header)
     assert table_rows.has_header()
 
 
-def test_table_parser_with_header_allow():
-    table_rows = TableParser(
+def test_parse_table_with_header_allow():
+    table_rows = parse_table(
         table_with_header,
         allow_cols=['depth']
     )
@@ -111,8 +111,8 @@ def test_table_parser_with_header_allow():
     assert results == expected_results
 
 
-def test_table_parser_with_header_deny_cols():
-    table_rows = TableParser(
+def test_parse_table_with_header_deny_cols():
+    table_rows = parse_table(
         table_with_header,
         deny_cols=['width']
     )
@@ -123,8 +123,8 @@ def test_table_parser_with_header_deny_cols():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_without_header():
-    table_rows = TableParser(table_without_header)
+def test_parse_table_without_header():
+    table_rows = parse_table(table_without_header)
     expected_results = [
         {'Height': '2'},
         {'Width': '3'}
@@ -132,8 +132,8 @@ def test_table_parser_without_header():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_without_header_v2():
-    table_rows = TableParser(table_without_header_v2)
+def test_parse_table_without_header_v2():
+    table_rows = parse_table(table_without_header_v2)
     expected_results = [
         {'Height': '2; 4'},
         {'Width': '3; 8'}
@@ -141,8 +141,8 @@ def test_table_parser_without_header_v2():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_without_header_v2_custom_separator():
-    table_rows = TableParser(
+def test_parse_table_without_header_v2_custom_separator():
+    table_rows = parse_table(
         table_without_header_v2,
         separator='|'
     )
@@ -153,8 +153,8 @@ def test_table_parser_without_header_v2_custom_separator():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_without_header_v2_skip_row_without_value_false():
-    table_rows = TableParser(
+def test_parse_table_without_header_v2_skip_row_without_value_false():
+    table_rows = parse_table(
         table_without_header_v2,
         skip_row_without_value=False
     )
@@ -166,8 +166,8 @@ def test_table_parser_without_header_v2_skip_row_without_value_false():
     assert list(table_rows) == expected_results
 
 
-def test_table_parser_without_header_v3():
-    table_rows = TableParser(table_without_header_v3)
+def test_parse_table_without_header_v3():
+    table_rows = parse_table(table_without_header_v3)
     expected_results = [
         {'Type': 'Easybook Pro'},
         {'Operating system': 'etOS'}

@@ -12,6 +12,25 @@ def test_parse_string_normalize_false():
     assert parsed_string == 'Easybook Pro 13 &lt;3 uÌˆnicode'
 
 
+def test_parse_string_capitalize():
+    test_text = 'easybook PRO 15'
+    # Lets test first with default settings capitalize=False
+    assert parse_string(test_text) == 'easybook PRO 15'
+
+    test_text = 'easybook PRO 15'
+    assert parse_string(test_text, capitalize=True) == 'Easybook PRO 15'
+
+
+def test_parse_string_uppercase():
+    test_text = 'easybook PRO 15'
+    assert parse_string(test_text, uppercase=True) == 'EASYBOOK PRO 15'
+
+
+def test_parse_string_lowercase():
+    test_text = 'easybook PRO 15'
+    assert parse_string(test_text, lowercase=True) == 'easybook pro 15'
+
+
 def test_parse_string_replace_keys():
     test_text = 'Easybook Pro 15'
     parsed_string = parse_string(
@@ -72,7 +91,7 @@ def test_parse_string_fix_spaces():
 def test_parse_string_escape_new_lines():
     test_text = 'Easybook\nPro\n15'
     # Lets test first with default settings
-    assert parse_string(raw_text=test_text) == 'Easybook Pro 15'
+    assert parse_string(test_text) == 'Easybook Pro 15'
 
     parsed_string = parse_string(
         raw_text=test_text,

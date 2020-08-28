@@ -5,7 +5,7 @@ from lxml import etree
 from pyquery import PyQuery
 
 from easytxt.config import HTML_RE_VALIDATOR, INLINE_TAGS
-from easytxt import TableParser
+from easytxt.parsers.table import TableParser
 
 
 def to_sentences(

@@ -1,11 +1,15 @@
 from typing import List, Optional, Union
 from easytxt import text as utext
+from easytxt.parsers.text import TextParser
 
 
 def parse_string(
         raw_text: Union[str, float, int, bytes],
         normalize: bool = True,
         language: str = 'en',
+        capitalize: bool = False,
+        uppercase: bool = False,
+        lowercase: bool = False,
         replace_keys: Optional[list] = None,
         remove_keys: Optional[list] = None,
         split_key: Optional[Union[str, tuple]] = None,
@@ -51,6 +55,13 @@ def parse_string(
             text=raw_text,
             language=language
         )
+
+    if capitalize:
+        raw_text = utext.capitalize(raw_text)
+    elif uppercase:
+        raw_text = raw_text.upper()
+    elif lowercase:
+        raw_text = raw_text.lower()
 
     if fix_spaces:
         raw_text = utext.normalize_spaces(raw_text)

@@ -16,10 +16,14 @@ class TextParser:
             language: str = 'en',
             css_query: Optional[str] = None,
             exclude_css: Optional[Union[List[str], str]] = None,
-            deny: Optional[List[str]] = None,
-            cdeny: Optional[List[str]] = None,
-            allow: Optional[List[str]] = None,
-            callow: Optional[List[str]] = None,
+            deny: Optional[Union[str, List[str]]] = None,
+            cdeny: Optional[Union[str, List[str]]] = None,
+            allow: Optional[Union[str, List[str]]] = None,
+            callow: Optional[Union[str, List[str]]] = None,
+            from_allow: Optional[Union[str, List[str]]] = None,
+            from_callow: Optional[Union[str, List[str]]] = None,
+            to_allow: Optional[Union[str, List[str]]] = None,
+            to_callow: Optional[Union[str, List[str]]] = None,
             normalize: bool = True,
             capitalize: bool = True,
             uppercase: bool = False,
@@ -49,6 +53,10 @@ class TextParser:
         self._cdeny = cdeny
         self._allow = allow
         self._callow = callow
+        self._from_allow = from_allow
+        self._from_callow = from_callow
+        self._to_allow = to_allow
+        self._to_callow = to_callow
         self._normalize = normalize
         self._capitalize = capitalize
         self._uppercase = uppercase
@@ -72,6 +80,12 @@ class TextParser:
     def __iter__(self):
         for sentence in self.sentences:
             yield sentence
+
+    def __str__(self):
+        return self.text
+
+    def __len__(self):
+        return len(self.sentences)
 
     @property
     def text(self) -> str:
@@ -151,21 +165,7 @@ class TextParser:
 
     def _text_to_sentences(self):
         if self._autodetect_html and html.validate(self._text):
-            raw_text = self._manage_keys_raw_text(self._text)
-
-            html_raw_sentences = html.to_sentences(
-                html_text=raw_text,
-                css_query=self._css_query,
-                exclude_css=self._exclude_css
-            )
-
-            raw_sentences = []
-
-            for html_raw_sentence in html_raw_sentences:
-                raw_sentences += self._text_to_raw_sentences(
-                    html_raw_sentence
-                )
-
+            raw_sentences = self._html_text_to_raw_sentences(self._text)
         else:
             raw_sentences = self._text_to_raw_sentences(self._text)
 
@@ -203,6 +203,24 @@ class TextParser:
 
         return raw_sentences
 
+    def _html_text_to_raw_sentences(self, html_raw_text: str) -> List[str]:
+        raw_text = self._manage_keys_raw_text(html_raw_text)
+
+        html_raw_sentences = html.to_sentences(
+            html_text=raw_text,
+            css_query=self._css_query,
+            exclude_css=self._exclude_css
+        )
+
+        raw_sentences = []
+
+        for html_raw_sentence in html_raw_sentences:
+            raw_sentences += self._text_to_raw_sentences(
+                html_raw_sentence
+            )
+
+        return raw_sentences
+
     def _text_to_raw_sentences(self, raw_text: str) -> List[str]:
         raw_text = self._normalize_raw_text(raw_text)
 
@@ -225,6 +243,24 @@ class TextParser:
                 sentences=raw_sentences,
                 keys=allow_keys,
                 case_sensitive=bool(self._callow)
+            )
+
+        from_allow_keys = self._from_allow or self._from_callow
+
+        if from_allow_keys:
+            raw_sentences = sentences.from_allow_contains(
+                sentences=raw_sentences,
+                keys=from_allow_keys,
+                case_sensitive=bool(self._from_callow)
+            )
+
+        to_allow_keys = self._to_allow or self._to_callow
+
+        if to_allow_keys:
+            raw_sentences = sentences.to_allow_contains(
+                sentences=raw_sentences,
+                keys=to_allow_keys,
+                case_sensitive=bool(self._to_callow)
             )
 
         deny_keys = self._cdeny or self._deny
