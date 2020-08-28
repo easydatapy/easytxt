@@ -17,7 +17,8 @@ def parse_string(
         text_num_to_numeric: bool = False,
         fix_spaces: bool = True,
         escape_new_lines: bool = True,
-        new_line_replacement: str = ' '
+        new_line_replacement: str = ' ',
+        add_stop: Optional[Union[bool, str]] = None
 ) -> str:
 
     split_keys = [split_key] if split_key else split_keys
@@ -45,7 +46,7 @@ def parse_string(
         )
 
     if split_keys:
-        raw_text = utext.from_split_keys(
+        raw_text = utext.split_by_keys(
             text=raw_text,
             split_keys=split_keys
         )
@@ -65,5 +66,13 @@ def parse_string(
 
     if fix_spaces:
         raw_text = utext.normalize_spaces(raw_text)
+
+    if add_stop:
+        if add_stop is True:
+            stop_key = '.'
+        else:
+            stop_key = add_stop
+
+        raw_text = utext.add_stop_key(raw_text, stop_key)
 
     return raw_text

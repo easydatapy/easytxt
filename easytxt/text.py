@@ -226,19 +226,22 @@ def to_feature(
     return text
 
 
-def from_split_key(
+def split_by_key(
         text: str,
         split_key: str,
-        split_index: int = 0
+        split_index: int = 0,
+        case_sensitive: bool = False
 ) -> str:
 
-    text = text.split(split_key)
-    return text[split_index]
+    ignore_case = 0 if case_sensitive else re.IGNORECASE
+
+    return re.split(split_key, text, ignore_case)[split_index]
 
 
-def from_split_keys(
+def split_by_keys(
         text: str,
-        split_keys: list
+        split_keys: list,
+        case_sensitive: bool = False
 ) -> str:
 
     for split_key in split_keys:
@@ -247,7 +250,12 @@ def from_split_keys(
         else:
             sk, si = split_key, 0
 
-        text = from_split_key(text, sk, si)
+        text = split_by_key(
+            text=text,
+            split_key=sk,
+            split_index=si,
+            case_sensitive=case_sensitive
+        )
 
     return text
 

@@ -113,3 +113,33 @@ def test_parse_string_text_num_to_numeric():
     test_text = 'two thousand and three words for the first time'
     parsed_string = parse_string(test_text, text_num_to_numeric=True)
     assert parsed_string == '2003 words for the 1 time'
+
+
+def test_parse_string_add_stop():
+    # Lets test default
+    test_text = 'Easybook Pro 15'
+    assert parse_string(test_text) == 'Easybook Pro 15'
+
+    test_text = 'Easybook Pro 15'
+    parsed_string = parse_string(
+        raw_text=test_text,
+        add_stop=True
+    )
+    assert parsed_string == 'Easybook Pro 15.'
+
+    # Test add stop if already exists
+    test_text = 'Easybook Pro 15!'
+    parsed_string = parse_string(
+        raw_text=test_text,
+        add_stop=True
+    )
+    assert parsed_string == 'Easybook Pro 15!'
+
+
+def test_parse_string_stop_key():
+    test_text = 'Easybook Pro 15'
+    parsed_string = parse_string(
+        raw_text=test_text,
+        add_stop='!'
+    )
+    assert parsed_string == 'Easybook Pro 15!'
