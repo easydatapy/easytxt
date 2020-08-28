@@ -16,14 +16,14 @@ class TextParser:
             language: str = 'en',
             css_query: Optional[str] = None,
             exclude_css: Optional[Union[List[str], str]] = None,
-            deny: Optional[Union[str, List[str]]] = None,
-            cdeny: Optional[Union[str, List[str]]] = None,
             allow: Optional[Union[str, List[str]]] = None,
             callow: Optional[Union[str, List[str]]] = None,
             from_allow: Optional[Union[str, List[str]]] = None,
             from_callow: Optional[Union[str, List[str]]] = None,
             to_allow: Optional[Union[str, List[str]]] = None,
             to_callow: Optional[Union[str, List[str]]] = None,
+            deny: Optional[Union[str, List[str]]] = None,
+            cdeny: Optional[Union[str, List[str]]] = None,
             normalize: bool = True,
             capitalize: bool = True,
             uppercase: bool = False,
@@ -49,14 +49,14 @@ class TextParser:
         self._language = language
         self._css_query = css_query
         self._exclude_css = exclude_css
-        self._deny = deny
-        self._cdeny = cdeny
         self._allow = allow
         self._callow = callow
         self._from_allow = from_allow
         self._from_callow = from_callow
         self._to_allow = to_allow
         self._to_callow = to_callow
+        self._deny = deny
+        self._cdeny = cdeny
         self._normalize = normalize
         self._capitalize = capitalize
         self._uppercase = uppercase
@@ -86,6 +86,26 @@ class TextParser:
 
     def __len__(self):
         return len(self.sentences)
+
+    def __add__(self, raw_sentences):
+        if isinstance(raw_sentences, str):
+            raw_sentences = [raw_sentences]
+
+        raw_sentences = self._process_raw_sentences(raw_sentences)
+
+        self.cached_sentences = self.sentences + raw_sentences
+
+        return self
+
+    def __radd__(self, raw_sentences):
+        if isinstance(raw_sentences, str):
+            raw_sentences = [raw_sentences]
+
+        raw_sentences = self._process_raw_sentences(raw_sentences)
+
+        self.cached_sentences = raw_sentences + self.sentences
+
+        return self
 
     @property
     def text(self) -> str:
@@ -169,6 +189,9 @@ class TextParser:
         else:
             raw_sentences = self._text_to_raw_sentences(self._text)
 
+        return self._process_raw_sentences(raw_sentences)
+
+    def _process_raw_sentences(self, raw_sentences) -> List[str]:
         if self._merge_sentences:
             raw_sentences = sentences.merge(
                 sentences=raw_sentences,

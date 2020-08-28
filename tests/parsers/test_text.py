@@ -352,3 +352,22 @@ def test_parse_text_str():
 def test_parse_text_len():
     test_text = '* First feature * second feature?'
     assert len(parse_text(test_text)) == 2
+
+
+def test_parse_text_add():
+    test_text = '* First feature * second feature?'
+    tp = parse_text(test_text) + 'hello World'
+    assert str(tp) == 'First feature. Second feature? Hello World.'
+    assert list(tp) == ['First feature.', 'Second feature?', 'Hello World.']
+
+    tp = parse_text(test_text) + ['hello', 'World!']
+    assert str(tp) == 'First feature. Second feature? Hello. World!'
+
+
+def test_parse_text_radd():
+    test_text = '* First feature * second feature?'
+    tp = 'hello World' + parse_text(test_text)
+    assert str(tp) == 'Hello World. First feature. Second feature?'
+
+    tp = ['hello', 'World!'] + parse_text(test_text)
+    assert str(tp) == 'Hello. World! First feature. Second feature?'

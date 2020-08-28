@@ -6,7 +6,6 @@ from easytxt.parsers.text import TextParser
 def parse_string(
         raw_text: Union[str, float, int, bytes],
         normalize: bool = True,
-        language: str = 'en',
         capitalize: bool = False,
         uppercase: bool = False,
         lowercase: bool = False,
@@ -15,6 +14,7 @@ def parse_string(
         split_key: Optional[Union[str, tuple]] = None,
         split_keys: Optional[List[Union[str, tuple]]] = None,
         text_num_to_numeric: bool = False,
+        language: str = 'en',
         fix_spaces: bool = True,
         escape_new_lines: bool = True,
         new_line_replacement: str = ' ',
