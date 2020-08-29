@@ -88,9 +88,12 @@ for ``regular text`` since ``html`` is detected and processed automatically.
     ['Some sentence.', 'Easy HD camera.']
 
 One of the best features of using ``parse_text`` on ``html`` is that it can extract
-table info in a structured. Lets get more info regarding this feature through example.
+table data into sentences. Lets get more info regarding this feature through example.
 
 .. code:: python
+
+    from easytxt import parse_text
+
 
     test_text_html = '''
         <p>Some paragraph demo text.</p>
@@ -125,7 +128,11 @@ In example above following sentences will be printed.
     ]
 
 Although in example we used table without header and with only two columns,
-``parse_text`` can easily handle tables with a header and multiple columns.
+``parse_text`` can easily handle tables with a header and more than two columns.
+Although it can parse table with infinite number of columns, it's not advised to
+``parse_text`` since sentences with table data would become hard to read. To
+extract data from a table with more complex structure ``parse_table`` is recommended
+to be used since it can return results as a list of dictionaries.
 
 Custom parameters
 -----------------
@@ -147,7 +154,7 @@ are supported. *Support for more is coming soon...*
 **css_query**
 
 In cases that we provide html string, we can through ``css_query`` parameter
-select from which html node text would be extracted.
+select from which html nodes text would get extracted.
 
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
     >>> pt = parse_text(test_text, css_query='p')
@@ -157,7 +164,7 @@ select from which html node text would be extracted.
 **exclude_css**
 
 In cases that we provide html string, we can through ``exclude_css`` parameter
-limit from which html node text would be extracted.
+limit from which html nodes would be excluded from parsing.
 
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
     >>> pt = parse_text(test_text, exclude_css=['p', 'b'])
@@ -456,7 +463,7 @@ desired char in a ``stop_key`` parameter.
 In cases when we want output in text format, we can change how sentences
 are merged together.
 
-For example bellow is default output:
+Lets see first default output in example bellow:
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text)
@@ -739,40 +746,143 @@ Examples
 In following examples we will use two tables. One with a header and one
 without it.
 
+.. code:: python
+
+    from easytxt import parse_table
+
+
+    test_text_html = '''
+        <p>Some paragraph demo text.</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td scope="row">Type</td>
+                    <td>Easybook Pro</td>
+                </tr>
+                <tr>
+                    <td scope="row">Operating system</td>
+                    <td>etOS</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>Text after <strong>table</strong>.</div>
+    '''
+
+    pt = parse_table(test_text_html)
+
+    for row in pt:
+        print(row)
+
+In example above following row data will be printed.
+
+.. code:: python
+
+    {'Type': 'Easybook Pro'}
+    {'Operating system': 'etOS'}
+
+Alternatively we can get data also as sentences.
+
+.. code:: python
+
+    print(pt.sentences)
+
+    [
+        'Type: Easybook Pro',
+        'Operating system: etOS'
+    ]
+
+Or a text.
+
+.. code:: python
+
+    print(pt.text)
+
+    * Type: Easybook Pro * Operating system: etOS
+
+As we can see, only table html will be extracted and by design other html nodes
+are ignored, so that any ambiguous text isn't processed. If header isn't explicitly
+specified with a ``th`` or a ``thead`` nodes, then ``parse_table`` will automatically
+assume that provided table is without header data and it will take values from first
+column as header info.
+
+Lets make a test on a more complex table with a header and multiple columns.
+
+.. code:: python
+
+    from easytxt import parse_table
+
+
+    test_text_html = '''
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>OS</th>
+                <th>Color</th>
+            </tr>
+            <tr>
+                <td>Easybook 15</td>
+                <td>etOS</td>
+                <td>Gray</td>
+            </tr>
+            <tr>
+                <td>Easyphone x1</td>
+                <td>Mobile etOS</td>
+                <td>Black</td>
+            </tr>
+            <tr>
+                <td>Easywatch abc</td>
+                <td>Mobile etOS</td>
+                <td>Blue</td>
+            </tr>
+        </table>
+    '''
+
+    pt = parse_table(test_text_html)
+
+    for row in pt:
+        print(row)
+
+In example above following row data will be printed.
+
+.. code:: python
+
+    {'Type': 'Easybook 15', 'OS': 'etOS', 'Color': 'Gray'}
+    {'Type': 'Easyphone x1', 'OS': 'Mobile etOS', 'Color': 'Black'}
+    {'Type': 'Easywatch abc', 'OS': 'Mobile etOS', 'Color': 'Blue'}
+
+Lets get table data printed as sentences.
+
+.. code:: python
+
+    print(pt.sentences)
+
+    [
+        'Type/OS/Color: Easybook 15/etOS/Gray',
+        'Type/OS/Color: Easyphone x1/Mobile etOS/Black',
+        'Type/OS/Color: Easywatch abc/Mobile etOS/Blue'
+    ]
+
+Or a text.
+
+.. code:: python
+
+    print(pt.text)
+
+    * Type/OS/Color: Easybook 15/etOS/Gray * Type/OS/Color: Easyphone x1/Mobile etOS/Black * Type/OS/Color: Easywatch abc/Mobile etOS/Blue
+
+Lets get header keys only. It only works in a table with header nodes.
+
+.. code:: python
+
+    print(pt.headers)
+
+    ['Type', 'OS', 'Color']
+
 Custom parameters
 -----------------
 
-**pq**
-
-description coming soon ...
-
-**allow_cols**
-
-description coming soon ...
-
-**callow_cols**
-
-description coming soon ...
-
-**deny_cols**
-
-description coming soon ...
-
-**cdeny_cols**
-
-description coming soon ...
-
-**separator**
-
-description coming soon ...
-
-**header**
-
-description coming soon ...
-
-**skip_row_without_value**
-
-description coming soon ...
+examples coming soon ...
+*For now please refer to the source code*
 
 Dependencies
 ============
