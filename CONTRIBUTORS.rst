@@ -1,2 +1,2 @@
-Rok Grabnar
-Iciar Fernandez (reporting issues on docs)
+* Rok Grabnar
+* Iciar Fernandez (reporting issues on docs)
