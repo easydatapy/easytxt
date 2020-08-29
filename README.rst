@@ -87,6 +87,46 @@ for ``regular text`` since ``html`` is detected and processed automatically.
     >>> pt.sentences
     ['Some sentence.', 'Easy HD camera.']
 
+One of the best features of using ``parse_text`` on ``html`` is that it can extract
+table info in a structured. Lets get more info regarding this feature through example.
+
+.. code:: python
+
+    test_text_html = '''
+        <p>Some paragraph demo text.</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td scope="row">Type</td>
+                    <td>Easybook Pro</td>
+                </tr>
+                <tr>
+                    <td scope="row">Operating system</td>
+                    <td>etOS</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>Text after <strong>table</strong>.</div>
+    '''
+
+    tp = parse_text(test_text_html)
+
+    print(tp.sentences)
+
+In example above following sentences will be printed.
+
+.. code:: python
+
+    [
+        'Some paragraph demo text.',
+        'Type: Easybook Pro.',
+        'Operating system: etOS.',
+        'Text after table.'
+    ]
+
+Although in example we used table without header and with only two columns,
+``parse_text`` can easily handle tables with a header and multiple columns.
+
 Custom parameters
 -----------------
 
