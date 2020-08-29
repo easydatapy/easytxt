@@ -312,7 +312,8 @@ We can remove all chars in sentences by providing list keys in a
 We can replace char values before text is split into sentences. This is
 especially useful if we want to fix text before it's parsed and so that
 is split into sentences correctly. It accepts ``regex`` as key values in a
-``tuple``.
+``tuple``. Please note that keys are not case sensitive and regex as key
+is also accepted.
 
 Lets first show default result with badly structured text without
 setting keys into ``replace_keys_raw_text``.
@@ -337,8 +338,17 @@ happens.
 
 Works similar as ``replace_keys_raw_text``, but instead of providing list
 of tuples in order to replace chars, here we provide list of chars to remove
-keys.
+keys. Lets try first on a sentence without setting keys to ``rremove_keys_raw_text``.
+Please note that keys are not case sensitive and regex as key is also accepted.
 
+
+    >>> test_text = 'Easybook pro 15. Color: Gray'
+    >>> pt = parse_text(test_text)
+    >>> pt.sentences
+    ['Easybook pro 15.', 'Color: Gray.']
+
+Text above due to stop key was split into two sentences. Lets prevent this
+by removing color and stop key at the same time and get one sentence instead.
 
     >>> test_text = 'Easybook pro 15. Color: Gray'
     >>> pt = parse_text(test_text, remove_keys_raw_text=['. color:'])
