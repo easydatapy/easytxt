@@ -88,9 +88,9 @@ def test_parse_table_text():
     assert table_rows.text == expected_results
 
 
-def test_parse_table_get_header_values():
+def test_parse_table_get_headers():
     table_rows = parse_table(table_with_header)
-    assert table_rows.header_values == ['Height', 'Width', 'Depth']
+    assert table_rows.headers == ['Height', 'Width', 'Depth']
 
 
 def test_parse_table_has_header():

@@ -112,7 +112,7 @@ class TableParser:
         return ''
 
     @property
-    def header_values(self):
+    def headers(self):
         return next(self._iter_list())
 
     def has_header(self) -> bool:
