@@ -6,7 +6,7 @@ EasyTXT is a set of high and low level modules to help you with text
 normalization and manipulation.
 
 **PLEASE NOTE:** *EasyTXT is still in alpha stage and some functionalities
-could change without deprecation warning, although in current stage less
+could change without deprecation warning, although in current stage this is less
 likely and class parameters should remain the same. For now it's discouraged
 to use it in production (if so, then on your own risk) and is for testing
 purposes only.*
