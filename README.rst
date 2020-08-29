@@ -33,6 +33,14 @@ Some of the most important features that EasyTXT provide:
 There are many more features regarding which, please refer to the documentation
 with lots of examples bellow.
 
+Installation
+============
+::
+
+    pip install easytxt
+
+easytxt requires Python 3.6+.
+
 parse_text
 ==========
 
