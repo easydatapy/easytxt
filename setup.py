@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='easytxt',
     version='0.0.1',
-    description='Text manipulation library',
+    description='Text manipulation and normalization library.',
     long_description=open('README.rst').read(),
     long_description_content_type="text/x-rst",
     author='Rok Grabnar',
