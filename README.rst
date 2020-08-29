@@ -27,6 +27,7 @@ Some of the most important features that EasyTXT provide:
 * normalizes spaces
 * converts html table data into sentences or features
 * html table parser which returns dict of column row info
+* autocomplete works with any method or function :)
 * ...
 
 There are many more features regarding which, please refer to the documentation
@@ -41,8 +42,8 @@ In this example lets parse badly structured text and output it into multiple
 formats.
 
 Please note that calling multiple formats at the same time won't affect
-performance since sentences are cached and all other formats call cached
-sentences under the hood.
+performance since sentences are cached and when calling other formats,
+cached sentences will be used in a process.
 
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
