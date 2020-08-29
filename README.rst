@@ -281,7 +281,10 @@ to ``True``.
 
 **min_chars**
 
-description coming soon ...
+By default ``min_chars`` has a value 5. This means that any sentence that has
+less than 5 chars, will be filtered out and not seen at the end result. This
+is done to remove ambiguous sentences, especially when extracting text from
+html. We can raise or decrease this limit by changing the value of ``min_chars``.
 
 **replace_keys**
 
@@ -306,11 +309,41 @@ We can remove all chars in sentences by providing list keys in a
 
 **replace_keys_raw_text**
 
-examples coming soon ...
+We can replace char values before text is split into sentences. This is
+especially useful if we want to fix text before it's parsed and so that
+is split into sentences correctly. It accepts ``regex`` as key values in a
+``tuple``.
+
+Lets first show default result with badly structured text without
+setting keys into ``replace_keys_raw_text``.
+
+    >>> test_text = 'Easybook pro 15 Color: Gray Material: Aluminium'
+    >>> pt = parse_text(test_text)
+    >>> pt.sentences
+    ['Easybook pro 15 Color: Gray Material: Aluminium.']
+
+As we can see from the result test text is returned as one sentence
+due to missing stop keys (``.``) between sentences. Lets fix this by
+adding stop keys into unprocessed text before sentence splitting
+happens.
+
+    >>> test_text = 'Easybook pro 15 Color: Gray Material: Aluminium'
+    >>> replace_keys = [('Color:', '. Color:'), ('Material:', '. Material:')]
+    >>> pt = parse_text(test_text, replace_keys_raw_text=replace_keys)
+    >>> pt.sentences
+    ['Easybook pro 15.', 'Color: Gray.', 'Material: Aluminium.']
 
 **remove_keys_raw_text**
 
-examples coming soon ...
+Works similar as ``replace_keys_raw_text``, but instead of providing list
+of tuples in order to replace chars, here we provide list of chars to remove
+keys.
+
+
+    >>> test_text = 'Easybook pro 15. Color: Gray'
+    >>> pt = parse_text(test_text, remove_keys_raw_text=['. color:'])
+    >>> pt.sentences
+    ['Easybook pro 15 Gray.']
 
 **split_inline_breaks**
 
@@ -368,10 +401,6 @@ desired char in a ``stop_key`` parameter.
     >>> pt.sentences
     ['First feature!', 'Second feature?']
 
-**stop_keys_ignore**
-
-examples coming soon ...
-
 **sentence_separator**
 
 In cases when we want output in text format, we can change how sentences
@@ -394,11 +423,17 @@ custom one.
 
 **text_num_to_numeric**
 
-examples coming soon ..
+We can convert all alpha chars that describe numeric values to actual
+numbers by setting ``text_num_to_numeric`` parameter to ``True``.
 
-**autodetect_html**
+    >>> test_text = 'First Sentence. Two thousand and three has it. Three Sentences.'
+    >>> pt = parse_text(test_text, text_num_to_numeric=True)
+    >>> pt.sentences
+    ['1 Sentence.', '2003 has it.', '3 Sentences.']
 
-examples coming soon ..
+If our text is in different language we need to change language value in
+our ``language`` parameter. Currently supported languages regarding
+``text_num_to_numeric`` are only ``en, es, hi and ru``.
 
 Invoked methods
 ---------------

@@ -311,6 +311,23 @@ def test_parse_text_stop_keys_split():
     assert tp.sentences == expected_result
 
 
+def test_parse_text_replace_keys_raw_text():
+    # Lets test default result with badly structured text
+    test_text = 'Easybook pro 15 Color: Gray Material: Aluminium'
+    pt = parse_text(test_text)
+    assert pt.sentences == ['Easybook pro 15 Color: Gray Material: Aluminium.']
+
+    replace_keys = [('Color:', '. Color:'), ('material:', '. Material:')]
+    pt = parse_text(test_text, replace_keys_raw_text=replace_keys)
+    assert pt.sentences == ['Easybook pro 15.', 'Color: Gray.', 'Material: Aluminium.']
+
+
+def test_parse_text_remove_keys_raw_text():
+    test_text = 'Easybook pro 15. Color: Gray'
+    pt = parse_text(test_text, remove_keys_raw_text=['. color:'])
+    assert pt.sentences == ['Easybook pro 15 Gray.']
+
+
 def test_parse_text_html_table():
     tp = parse_text(test_table.table_without_header_v3)
     expected_results = ['Type: Easybook Pro.', 'Operating system: etOS.']
