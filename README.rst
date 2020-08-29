@@ -5,24 +5,32 @@ Welcome to EasyTXT documentation!
 EasyTXT is a set of high and low level modules to help you with text
 normalization and manipulation.
 
+**PLEASE NOTE:** *EasyTXT is still in alpha stage and some functionalities
+could change without deprecation warning, although in current stage less
+likely and class parameters should remain the same. For now it's discouraged
+to use it in production (if so, then on your own risk) and is for testing
+purposes only.*
+
 .. contents::
 
-Basic Features
-==============
+Features
+========
 
 Some of the most important features that EasyTXT provide:
 
-* normalize text
+* normalizes text
 * break text into normalized sentences
 * break text into normalized features
-* HTML to text
-* fix text encoding
-* normalize spaces
-* converting html table data into sentences or features
-* html table reader which returns dict of column row info
+* converts HTML to normalized text
+* text manipulation (allow or deny sentences, etc.)
+* fixes text encoding
+* normalizes spaces
+* converts html table data into sentences or features
+* html table parser which returns dict of column row info
+* ...
 
-There are many more features for which please refer to the source code.
-Complete documentation for all features is a work in progress.
+There are many more features regarding which, please refer to the documentation
+with lots of examples bellow.
 
 parse_text
 ==========
@@ -33,8 +41,8 @@ In this example lets parse badly structured text and output it into multiple
 formats.
 
 Please note that calling multiple formats at the same time won't affect
-performance since sentences are cached and all other formats call sentenced
-under the hood.
+performance since sentences are cached and all other formats call cached
+sentences under the hood.
 
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
@@ -49,11 +57,12 @@ Lets just get normalized text.
 
 Here is example how to extract features from text.
 
-    >>> test_text = 'Features - color: Black - material: Aluminium. Last Sentence'
+    >>> test_text = '- color: Black - material: Aluminium. Last Sentence'
     >>> pt = parse_text(test_text)
 
 Text parser will try to automatically detect which are regular sentences and which
-are features and show only extracted features when called ``features`` attr.
+are features and show only extracted features when called ``features`` attr. By
+default features would get capitalized in a same way as sentences.
 
     >>> pt.features
     [('Color', 'Black'), ('Material', 'Aluminium')]
@@ -68,13 +77,18 @@ Let's get a value from a specific feature.
     >>> pt.feature('color')
     Black
 
+*We don't need to call ``features`` property first in order to get value
+with ``feature`` since this is already done in a background. Features are
+also cached in a similar way as sentences to increase performance in a case
+we make multiple calls.*
+
 Although regular sentences are ignored when calling ``features`` attr, they can
 still be seen when calling ``sentences`` or ``text`` attr.
 
     >>> pt.sentences
-    ['Ignored text.', 'Color: Black.', 'Material: Aluminium.', 'Ignore again.']
+    ['Color: Black.', 'Material: Aluminium.', 'Last Sentence.']
     >>> pt.text
-    Ignored text. Color: Black. Material: Aluminium. Ignore again.
+    Color: Black. Material: Aluminium. Last Sentence.
 
 HTML examples
 -------------
@@ -153,7 +167,7 @@ are supported. *Support for more is coming soon...*
 
 **css_query**
 
-In cases that we provide html string, we can through ``css_query`` parameter
+In cases that we provide html string, we can with ``css_query`` parameter
 select from which html nodes text would get extracted.
 
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
@@ -174,7 +188,7 @@ limit from which html nodes would be excluded from parsing.
 **allow**
 
 We can control which sentences we want to get extracted by providing list of
-keywords into ``allow`` parameter.
+keywords into ``allow`` parameter. Keys are not case sensitive.
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, allow=['first', 'third'])
@@ -198,7 +212,7 @@ are case sensitive. Regex pattern as key is also supported.
 **from_allow**
 
 We can skip sentences by providing keys in ``from_allow`` parameter.
-Regex pattern as key is also supported.
+Keys are not case sensitive and regex pattern is also supported.
 
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, from_allow=['second'])
@@ -225,8 +239,8 @@ Lets recreate same example as before but with lowercase key.
 **to_allow**
 
 ``to_allow`` is similar to ``from_allow`` but in reverse order. Here
-are sentences skipped after provided key is found. Regex pattern as key
-is also supported.
+are sentences skipped after provided key is found. Keys are not case
+sensitive and regex pattern is also supported.
 
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, to_allow=['four'])
@@ -236,7 +250,7 @@ is also supported.
 **to_callow**
 
 ``to_callow`` is similar to ``to_allow`` but with exception that
-provided keys are case sensitive. Regex pattern as key is also supported.
+provided keys are case sensitive. Regex pattern is also supported.
 
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, to_callow=['FOUR'])
@@ -253,7 +267,8 @@ Lets recreate same example as before but with lowercase key.
 **deny**
 
 We can control which sentences we don't want to get extracted by providing
-list of keywords into ``deny`` parameter. Regex pattern as key is also supported.
+list of keywords into ``deny`` parameter. Keys are not case sensitive and
+regex pattern is also supported.
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, deny=['first', 'third'])
@@ -263,7 +278,7 @@ list of keywords into ``deny`` parameter. Regex pattern as key is also supported
 **cdeny**
 
 ``cdeny`` is similar to ``deny`` but with exception that provided keys
-are case sensitive. Regex pattern as key is also supported.
+are case sensitive. Regex pattern as a key is also supported.
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, deny=['First', 'Third'])
@@ -297,7 +312,7 @@ By default all sentences will get capitalized as we can see bellow.
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
-    ['First sentence?', 'Second sentence.', 'Third sentence.']
+    ['First sentence?', 'Second sentence.', 'third sentence.']
 
 We can disable this behaviour by setting parameter ``capitalize`` to ``False``.
 
@@ -328,16 +343,16 @@ to ``True``.
 
 **min_chars**
 
-By default ``min_chars`` has a value 5. This means that any sentence that has
+By default ``min_chars`` has a value of 5. This means that any sentence that has
 less than 5 chars, will be filtered out and not seen at the end result. This
 is done to remove ambiguous sentences, especially when extracting text from
 html. We can raise or decrease this limit by changing the value of ``min_chars``.
 
 **replace_keys**
 
-We can replace all chars in sentences by providing tuple of key and
+We can replace all chars in a sentences by providing tuple of search key and
 replacement char in a ``replace_keys`` parameter. Regex pattern as key is
-also supported.
+also supported and search keys are not case sensitive.
 
     >>> test_text = 'first sentence! - second sentence.  Third'
     >>> pt = parse_text(test_text, replace_keys=[('third', 'Last'), ('nce!', 'nce?')])
@@ -346,8 +361,9 @@ also supported.
 
 **remove_keys**
 
-We can remove all chars in sentences by providing list keys in a
-``replace_keys`` parameter. Regex pattern as key is also supported.
+We can remove all chars in sentences by providing list of search keys in a
+``replace_keys`` parameter. Regex pattern as key is also supported and keys
+are not case sensitive.
 
     >>> test_text = 'first sentence! - second sentence.  Third'
     >>> pt = parse_text(test_text, remove_keys=['sentence', '!'])
@@ -394,7 +410,7 @@ Please note that keys are not case sensitive and regex as key is also accepted.
     >>> pt.sentences
     ['Easybook pro 15.', 'Color: Gray.']
 
-Text above due to stop key was split into two sentences. Lets prevent this
+Text above due to stop key ``.`` was split into two sentences. Lets prevent this
 by removing color and stop key at the same time and get one sentence instead.
 
     >>> test_text = 'Easybook pro 15. Color: Gray'
@@ -414,7 +430,7 @@ Example:
     >>> pt.sentences
     ['First param.', 'Second param.']
 
-In cases when we want to disable this behaviour we can set parameter
+In cases when we want to disable this behaviour, we can set parameter
 ``split_inline_breaks`` to ``False``.
 
     >>> test_text = '- first param - second param'
@@ -432,7 +448,7 @@ we want to split sentences by different char than default one, we can do so by
 providing list of chars into ``inline_breaks`` parameter.
 
     >>> test_text = '> first param > second param'
-    >>> pt = parse_text(test_text, inline_breaks=['> '])
+    >>> pt = parse_text(test_text, inline_breaks=['>'])
     >>> pt.sentences
     ['First param.', 'Second param.']
 
@@ -469,6 +485,8 @@ Lets see first default output in example bellow:
     >>> pt = parse_text(test_text)
     >>> pt.text
     First sentence? Second sentence. Third sentence.
+
+Behind the scene simple ``join`` on a list of sentences is performed.
 
 Now lets change default value ``' '`` of ``sentence_separator`` to our
 custom one.
@@ -554,13 +572,13 @@ Another alternative:
 parse_string
 ============
 ``parse_string`` is a helper method to normalize and manipulate simple
-texts like titles or similar. It's also much performant than ``parse_text``
+texts like titles or similar. It's also more performant than ``parse_text``
 since it doesn't perform sentence split, capitalization by default ...
-Basically it accepts string or float, int and returns normalized string.
+Basically it accepts ``str``, ``float``, ``int`` and returns normalized string.
 
 Examples
 --------
-In this example lets normalize text with bad encoding.
+In this example lets process text with bad encoding.
 
     >>> from easytxt import parse_string
     >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
