@@ -76,6 +76,11 @@ def test_parse_string_split_keys():
     assert parsed_string == 'pro'
 
 
+def test_parse_string_max_chars():
+    test_text = 'Easybook Pro 13'
+    assert parse_string(test_text, max_chars=8) == 'Easybook'
+
+
 def test_parse_string_fix_spaces():
     test_text = 'Easybook   Pro  15'
     # Lets test first with default settings

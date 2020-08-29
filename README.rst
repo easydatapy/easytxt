@@ -687,6 +687,15 @@ split key it accepts list of keys.
     >>> parse_string(test_text, split_keys=[('-', -1), '_'])
     pro
 
+**max_chars**
+
+With ``max_chars`` parameter we can limit maximum number that are shown
+at the end result. Lets see how it works in example bellow.
+
+    >>> test_text = 'Easybook Pro 13'
+    >>> parse_string(test_text, max_chars=8)
+    Easybook
+
 **text_num_to_numeric**
 
 We can convert all alpha chars that describe numeric values to actual

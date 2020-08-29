@@ -13,6 +13,7 @@ def parse_string(
         remove_keys: Optional[list] = None,
         split_key: Optional[Union[str, tuple]] = None,
         split_keys: Optional[List[Union[str, tuple]]] = None,
+        max_chars: Optional[int] = None,
         text_num_to_numeric: bool = False,
         language: str = 'en',
         fix_spaces: bool = True,
@@ -66,6 +67,9 @@ def parse_string(
 
     if fix_spaces:
         raw_text = utext.normalize_spaces(raw_text)
+
+    if max_chars and raw_text and len(raw_text) >= max_chars:
+        raw_text = utext.max_chars_limit(raw_text, max_chars)
 
     if add_stop:
         if add_stop is True:

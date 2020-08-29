@@ -174,6 +174,10 @@ def normalize(
     return text.replace(':.', ':').strip()
 
 
+def max_chars_limit(text: str, max_chars: int):
+    return text[0: max_chars]
+
+
 def remove_inline_breaks(
         text: str,
         inline_breaks: List[str]
