@@ -21,6 +21,11 @@ def test_parse_string_capitalize():
     assert parse_string(test_text, capitalize=True) == 'Easybook PRO 15'
 
 
+def test_parse_string_title():
+    test_text = 'easybook PRO 15'
+    assert parse_string(test_text, title=True) == 'Easybook Pro 15'
+
+
 def test_parse_string_uppercase():
     test_text = 'easybook PRO 15'
     assert parse_string(test_text, uppercase=True) == 'EASYBOOK PRO 15'

@@ -7,6 +7,7 @@ def parse_string(
         raw_text: Union[str, float, int, bytes],
         normalize: bool = True,
         capitalize: bool = False,
+        title: bool = False,
         uppercase: bool = False,
         lowercase: bool = False,
         replace_keys: Optional[list] = None,
@@ -60,6 +61,8 @@ def parse_string(
 
     if capitalize:
         raw_text = utext.capitalize(raw_text)
+    elif title:
+        raw_text = raw_text.title()
     elif uppercase:
         raw_text = raw_text.upper()
     elif lowercase:

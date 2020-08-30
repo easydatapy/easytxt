@@ -87,6 +87,10 @@ def capitalize(sentences: List[str]) -> List[str]:
     return [utext.capitalize(sentence) for sentence in sentences]
 
 
+def title(sentences: List[str]) -> List[str]:
+    return [sentence.title() for sentence in sentences if sentence]
+
+
 def uppercase(sentences: List[str]) -> List[str]:
     return [sentence.upper() for sentence in sentences if sentence]
 

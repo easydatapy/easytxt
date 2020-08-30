@@ -330,13 +330,23 @@ We can disable this behaviour by setting parameter ``capitalize`` to ``False``.
     >>> pt.sentences
     ['first sentence?', 'Second sentence.', 'third sentence.']
 
+**title**
+
+We can set our text output to title by setting parameter ``title``
+to ``True``.
+
+    >>> test_text = 'first sentence? Second sentence. third sentence'
+    >>> pt = parse_text(test_text, title=True)
+    >>> pt.text
+    'First Sentence? Second Sentence. Third Sentence'
+
 **uppercase**
 
 We can set our text output to uppercase by setting parameter ``uppercase``
 to ``True``.
 
     >>> test_text = 'first sentence? Second sentence. third sentence'
-    >>> pt = parse_text(test_text, capitalize=False)
+    >>> pt = parse_text(test_text, uppercase=True)
     >>> pt.sentences
     ['FIRST SENTENCE?', 'SECOND SENTENCE.', 'THIRD SENTENCE.']
 
@@ -346,7 +356,7 @@ We can set our text output to lowercase by setting parameter ``lowercase``
 to ``True``.
 
     >>> test_text = 'first sentence? Second sentence. third sentence'
-    >>> pt = parse_text(test_text, capitalize=False)
+    >>> pt = parse_text(test_text, lowercase=True)
     >>> pt.text
     'first sentence? second sentence. third sentence'
 
@@ -625,10 +635,19 @@ We can capitalize first character in our string if needed by setting
     >>> parse_string(test_text, capitalize=True)
     Easybook PRO 15
 
+**title**
+
+We can set all first chars in a word uppercase while other chars in a word
+become lowercase with``title`` parameter set to ``True``.
+
+    >>> test_text = 'easybook PRO 15'
+    >>> parse_string(test_text, title=True)
+    Easybook Pro 15
+
 **uppercase**
 
-We can set all chars in our string to uppercase by setting ``uppercase``
-parameter to ``True``.
+We can set all chars in our string to uppercase by ``uppercase``
+parameter set to ``True``.
 
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, uppercase=True)
@@ -636,8 +655,8 @@ parameter to ``True``.
 
 **lowercase**
 
-We can set all chars in our string to lowercase by setting ``lowercase``
-parameter to ``True``.
+We can set all chars in our string to lowercase by ``lowercase``
+parameter set to ``True``.
 
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, lowercase=True)

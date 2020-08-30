@@ -26,6 +26,7 @@ class TextParser:
             cdeny: Optional[Union[str, List[str]]] = None,
             normalize: bool = True,
             capitalize: bool = True,
+            title: bool = False,
             uppercase: bool = False,
             lowercase: bool = False,
             min_chars: int = 5,
@@ -59,6 +60,7 @@ class TextParser:
         self._cdeny = cdeny
         self._normalize = normalize
         self._capitalize = capitalize
+        self._title = title
         self._uppercase = uppercase
         self._lowercase = lowercase
         self._min_chars = min_chars
@@ -314,6 +316,8 @@ class TextParser:
             raw_sentences = sentences.lowercase(raw_sentences)
         elif self._uppercase:
             raw_sentences = sentences.uppercase(raw_sentences)
+        elif self._title:
+            raw_sentences = sentences.title(raw_sentences)
         elif self._capitalize:
             raw_sentences = sentences.capitalize(raw_sentences)
 

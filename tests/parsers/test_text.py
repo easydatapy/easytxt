@@ -161,6 +161,14 @@ def test_parse_text_capitalize_false():
     assert tp.text == 'first sentence! second sentence. Third.'
 
 
+def test_parse_text_title_true():
+    tp = parse_text(
+        test_text_sentences,
+        title=True
+    )
+    assert tp.text == 'First Sentence! Second Sentence. Third.'
+
+
 def test_parse_text_lowercase_true():
     tp = parse_text(
         test_text_sentences,
