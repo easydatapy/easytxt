@@ -269,10 +269,10 @@ def to_str(
         default: Optional[str] = ''
 ):
 
-    if not value:
+    if value is None:
         return default
 
-    if isinstance(value, (int, float)):
+    if isinstance(value, (int, float, bool)):
         value = str(value)
 
     return value
