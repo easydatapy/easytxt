@@ -4,7 +4,7 @@ from easytxt.parsers.text import TextParser
 
 
 def parse_string(
-        raw_text: Union[str, float, int, bytes],
+        raw_text: Optional[Union[str, float, int, bytes]],
         normalize: bool = True,
         capitalize: bool = False,
         title: bool = False,
