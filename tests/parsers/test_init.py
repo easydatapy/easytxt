@@ -1,6 +1,37 @@
 from easytxt.parsers import parse_string
 
 
+def test_parse_string_str_type():
+    test_text = 'easybook Pro 15'
+    assert parse_string(test_text) == 'easybook Pro 15'
+
+    assert parse_string('') == ''
+
+
+def test_parse_string_int_type():
+    assert parse_string(123) == '123'
+
+    assert parse_string(0) == '0'
+
+
+def test_parse_string_float_type():
+    assert parse_string(123.12) == '123.12'
+
+    assert parse_string(0.15) == '0.15'
+
+    assert parse_string(15.50) == '15.5'
+
+
+def test_parse_string_bool_type():
+    assert parse_string(True) == 'True'
+
+    assert parse_string(False) == 'False'
+
+
+def test_parse_string_none():
+    assert parse_string(None) == ''
+
+
 def test_parse_string_normalize_default():
     test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
     assert parse_string(test_text) == 'Easybook Pro 13 <3 ünicode'
