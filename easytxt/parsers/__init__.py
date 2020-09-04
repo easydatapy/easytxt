@@ -15,6 +15,9 @@ def parse_string(
         split_key: Optional[Union[str, tuple]] = None,
         split_keys: Optional[List[Union[str, tuple]]] = None,
         take: Optional[int] = None,
+        take_strip: bool = True,
+        skip: Optional[int] = None,
+        skip_strip: bool = True,
         text_num_to_numeric: bool = False,
         language: str = 'en',
         fix_spaces: bool = True,
@@ -71,8 +74,19 @@ def parse_string(
     if fix_spaces:
         raw_text = utext.normalize_spaces(raw_text)
 
-    if take and raw_text and len(raw_text) >= take:
-        raw_text = utext.take(raw_text, take)
+    if take and raw_text:
+        raw_text = utext.take(
+            text=raw_text,
+            limit=take,
+            strip=take_strip
+        )
+
+    if skip and raw_text:
+        raw_text = utext.skip(
+            text=raw_text,
+            limit=skip,
+            strip=skip_strip
+        )
 
     if add_stop:
         if add_stop is True:

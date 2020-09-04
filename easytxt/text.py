@@ -180,11 +180,25 @@ def normalize(
     return text.replace(':.', ':').strip()
 
 
-def take(text: str, limit: int):
-    if take == 0:
+def take(text: str, limit: int, strip=True):
+    if limit == 0:
         raise ValueError('take limit cannot be 0!')
 
-    return text[0: limit]
+    if limit > len(text):
+        return text
+
+    text = text[0: limit]
+
+    return text.strip() if strip else text
+
+
+def skip(text: str, limit: int, strip=True):
+    if limit > len(text):
+        return ''
+
+    text = text[limit:]
+
+    return text.strip() if strip else text
 
 
 def remove_inline_breaks(
