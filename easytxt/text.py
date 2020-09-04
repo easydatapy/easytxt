@@ -101,9 +101,15 @@ def remove_stop_key(
     if stop_keys is None:
         stop_keys = config.STOP_KEYS
 
+    text = text.strip()
+
     for stop_key in stop_keys:
         if text.endswith(stop_key):
             text = text.rstrip(stop_key)
+
+            text = text.strip()
+
+            break
 
     return text
 
