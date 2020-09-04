@@ -180,8 +180,11 @@ def normalize(
     return text.replace(':.', ':').strip()
 
 
-def max_chars_limit(text: str, max_chars: int):
-    return text[0: max_chars]
+def take(text: str, limit: int):
+    if take == 0:
+        raise ValueError('take limit cannot be 0!')
+
+    return text[0: limit]
 
 
 def remove_inline_breaks(
