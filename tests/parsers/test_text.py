@@ -1,3 +1,5 @@
+import pytest
+
 from easytxt import parse_text
 
 from tests.factory import features_samples
@@ -11,22 +13,28 @@ test_text_sentences_v2 = ('Features: <ul><li>* FaceTime HD camera </li>'
 test_text_sentences_v3 = 'First txt. Second txt. 3 Txt. FOUR txt.'
 
 
-def test_parse_text_to_sentences():
-    for test_sentence_tuple in sentences_samples.english:
-        test_sentences, expected_sentences = test_sentence_tuple
-        assert parse_text(test_sentences).sentences == expected_sentences
+@pytest.mark.parametrize(
+    'test_data, result',
+    sentences_samples.english
+)
+def test_parse_text_to_sentences(test_data, result):
+    assert parse_text(test_data).sentences == result
 
 
-def test_parse_text_to_text():
-    for test_sentence_tuple in sentences_samples.english:
-        test_sentences, expected_sentences = test_sentence_tuple
-        assert parse_text(test_sentences).text == ' '.join(expected_sentences)
+@pytest.mark.parametrize(
+    'test_data, result',
+    sentences_samples.english
+)
+def test_parse_text_to_text(test_data, result):
+    assert parse_text(test_data).text == ' '.join(result)
 
 
-def test_parse_text_to_features():
-    for test_sentence_tuple in features_samples.english:
-        test_sentences, expected_sentences = test_sentence_tuple
-        assert parse_text(test_sentences).features == expected_sentences
+@pytest.mark.parametrize(
+    'test_data, result',
+    features_samples.english
+)
+def test_parse_text_to_features(test_data, result):
+    assert parse_text(test_data).features == result
 
 
 def test_parse_text_to_features_dict():
@@ -34,123 +42,162 @@ def test_parse_text_to_features_dict():
     assert parse_text(features_test_text).features_dict == expected_results
 
 
-def test_parse_text_to_feature():
-    assert parse_text(features_test_text).feature('color') == 'Black'
-    assert parse_text(features_test_text).feature('Col') == 'Black'
-    assert parse_text(features_test_text).feature('Size') is None
+@pytest.mark.parametrize(
+    'feature, test_data, result',
+    [
+        ('color', features_test_text, 'Black'),
+        ('Col', features_test_text, 'Black'),
+        ('Size', features_test_text, None),
+    ]
+)
+def test_parse_text_to_feature(feature, test_data, result):
+    assert parse_text(test_data).feature(feature) == result
 
 
-def test_parse_text_to_feature_exact():
-    assert parse_text(features_test_text).feature_exact('Color') == 'Black'
-    assert parse_text(features_test_text).feature_exact('col') is None
+@pytest.mark.parametrize(
+    'test_data, feature, result',
+    [
+        (features_test_text, 'color', 'Black'),
+        (features_test_text, 'col', None),
+        (features_test_text, 'Size', None),
+    ]
+)
+def test_parse_text_to_feature_exact(test_data, feature, result):
+    assert parse_text(test_data).feature_exact(feature) == result
 
 
-def test_parse_text_to_raw_features():
-    test_text = 'Some sentence - color: Black'
-    expected_results = ['Some sentence.', ('Color', 'Black')]
-    assert parse_text(test_text).raw_features == expected_results
+@pytest.mark.parametrize(
+    'test_data, result',
+    [
+        (
+                'Some sentence - color: Black',
+                ['Some sentence.', ('Color', 'Black')]
+        ),
+    ]
+)
+def test_parse_text_to_raw_features(test_data, result):
+    assert parse_text(test_data).raw_features == result
 
 
-def test_parse_text_feature_split_keys():
-    # Lets first test with default split keys
-    test_text = 'Color: Black. Material; Aluminium'
-    expected_results = [('Color', 'Black')]
-    assert parse_text(test_text).features == expected_results
-
-    # Lets add custom split keys
-    expected_results = [('Color', 'Black'), ('Material', 'Aluminium')]
-    tp = parse_text(test_text, feature_split_keys=[':', ';'])
-    assert tp.features == expected_results
-
-
-def test_parse_text_allow():
-    tp = parse_text(
-        test_text_sentences,
-        allow=['first']
-    )
-    assert list(tp) == ['First sentence!']
-
-    tp = parse_text(
-        test_text_sentences,
-        allow=['first', 'third']
-    )
-    assert list(tp) == ['First sentence!', 'Third.']
+@pytest.mark.parametrize(
+    'test_data, feature_split_keys, result',
+    [
+        (
+                'Color: Black. Material; Aluminium',
+                [':', ';'],
+                [('Color', 'Black'), ('Material', 'Aluminium')]
+        ),
+    ]
+)
+def test_parse_text_feature_split_keys(test_data, feature_split_keys, result):
+    tp = parse_text(test_data, feature_split_keys=feature_split_keys)
+    assert tp.features == result
 
 
-def test_parse_text_case_sensitive_allow():
-    tp = parse_text(
-        test_text_sentences,
-        callow=['First', 'third']
-    )
-    assert list(tp) == ['First sentence!']
+@pytest.mark.parametrize(
+    'test_data, allow, result',
+    [
+        (test_text_sentences, ['first'], ['First sentence!']),
+        (
+                test_text_sentences,
+                ['first', 'third'],
+                ['First sentence!', 'Third.']
+        ),
+    ]
+)
+def test_parse_text_allow(test_data, allow, result):
+    tp = parse_text(test_data, allow=allow)
+    assert list(tp) == result
 
 
-def test_parse_text_from_allow():
-    tp = parse_text(
-        test_text_sentences_v3,
-        from_allow=['second']
-    )
-    assert str(tp) == 'Second txt. 3 Txt. FOUR txt.'
+@pytest.mark.parametrize(
+    'test_data, callow, result',
+    [
+        (test_text_sentences, ['First', 'third'], ['First sentence!']),
+    ]
+)
+def test_parse_text_case_sensitive_allow(test_data, callow, result):
+    tp = parse_text(test_data, callow=callow)
+    assert list(tp) == result
 
 
-def test_parse_text_from_callow():
-    tp = parse_text(
-        test_text_sentences_v3,
-        from_callow=['Second']
-    )
-    assert str(tp) == 'Second txt. 3 Txt. FOUR txt.'
-
-    # Lets test with wrong case
-    tp = parse_text(
-        test_text_sentences_v3,
-        from_callow=['second']
-    )
-    assert str(tp) == ''
+@pytest.mark.parametrize(
+    'test_data, from_allow, result',
+    [
+        (test_text_sentences_v3, ['second'], 'Second txt. 3 Txt. FOUR txt.'),
+    ]
+)
+def test_parse_text_from_allow(test_data, from_allow, result):
+    tp = parse_text(test_data, from_allow=from_allow)
+    assert str(tp) == result
 
 
-def test_parse_text_to_allow():
-    tp = parse_text(
-        test_text_sentences_v3,
-        to_allow=['four']
-    )
-    assert str(tp) == 'First txt. Second txt. 3 Txt.'
+@pytest.mark.parametrize(
+    'test_data, from_callow, result',
+    [
+        (test_text_sentences_v3, ['Second'], 'Second txt. 3 Txt. FOUR txt.'),
+        # Test case with a wrong case
+        (test_text_sentences_v3, ['second'], ''),
+    ]
+)
+def test_parse_text_from_callow(test_data, from_callow, result):
+    tp = parse_text(test_data, from_callow=from_callow)
+    assert str(tp) == result
 
 
-def test_parse_text_to_callow():
-    tp = parse_text(
-        test_text_sentences_v3,
-        to_callow=['FOUR']
-    )
-    assert str(tp) == 'First txt. Second txt. 3 Txt.'
-
-    # Lets test with wrong case
-    tp = parse_text(
-        test_text_sentences_v3,
-        to_callow=['four']
-    )
-    assert str(tp) == 'First txt. Second txt. 3 Txt. FOUR txt.'
+@pytest.mark.parametrize(
+    'test_data, to_allow, result',
+    [
+        (test_text_sentences_v3, ['four'], 'First txt. Second txt. 3 Txt.'),
+    ]
+)
+def test_parse_text_to_allow(test_data, to_allow, result):
+    tp = parse_text(test_data, to_allow=to_allow)
+    assert str(tp) == result
 
 
-def test_parse_text_deny():
-    tp = parse_text(
-        test_text_sentences,
-        deny=['second', 'third']
-    )
-    assert tp.sentences == ['First sentence!']
+@pytest.mark.parametrize(
+    'test_data, to_callow, result',
+    [
+        (test_text_sentences_v3, ['FOUR'], 'First txt. Second txt. 3 Txt.'),
+        # Test case with a wrong case
+        (
+                test_text_sentences_v3,
+                ['four'],
+                'First txt. Second txt. 3 Txt. FOUR txt.'
+        ),
+    ]
+)
+def test_parse_text_to_callow(test_data, to_callow, result):
+    tp = parse_text(test_text_sentences_v3, to_callow=to_callow)
+    assert str(tp) == result
 
-    tp = parse_text(
-        test_text_sentences,
-        deny=['secon']
-    )
-    assert tp.sentences == ['First sentence!', 'Third.']
+
+@pytest.mark.parametrize(
+    'test_data, deny, result',
+    [
+        (test_text_sentences, ['second', 'third'], ['First sentence!']),
+        (test_text_sentences, ['secon'], ['First sentence!', 'Third.']),
+    ]
+)
+def test_parse_text_deny(test_data, deny, result):
+    tp = parse_text(test_data, deny=deny)
+    assert tp.sentences == result
 
 
-def test_parse_text_case_sensitive_deny():
-    tp = parse_text(
-        test_text_sentences,
-        cdeny=['first', 'Second', 'Thir']
-    )
-    assert tp.sentences == ['First sentence!']
+@pytest.mark.parametrize(
+    'test_data, cdeny, result',
+    [
+        (
+                test_text_sentences,
+                ['first', 'Second', 'Thir'],
+                ['First sentence!']
+        ),
+    ]
+)
+def test_parse_text_case_sensitive_deny(test_data, cdeny, result):
+    tp = parse_text(test_data, cdeny=cdeny)
+    assert tp.sentences == result
 
 
 def test_parse_text_capitalize_false():
