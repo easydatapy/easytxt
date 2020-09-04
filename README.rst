@@ -53,6 +53,8 @@ Please note that calling multiple formats at the same time won't affect
 performance since sentences are cached and when calling other formats,
 cached sentences will be used in a process.
 
+.. code-block:: python
+
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
     >>> pt = parse_text(test_text)
@@ -61,10 +63,14 @@ cached sentences will be used in a process.
 
 Lets just get normalized text.
 
+.. code-block:: python
+
     >>> pt.text
     First sentence... Bad ünicode. HTML entities <3!
 
 Here is example how to extract features from text.
+
+.. code-block:: python
 
     >>> test_text = '- color: Black - material: Aluminium. Last Sentence'
     >>> pt = parse_text(test_text)
@@ -73,15 +79,21 @@ Text parser will try to automatically detect which are regular sentences and whi
 are features and show only extracted features when called ``features`` attr. By
 default features would get capitalized in a same way as sentences.
 
+.. code-block:: python
+
     >>> pt.features
     [('Color', 'Black'), ('Material', 'Aluminium')]
 
 Return features dictionary instead a list of tuples.
 
+.. code-block:: python
+
     >>> pt.features_dict
     {'Color': 'Black', 'Material': 'Aluminium'}
 
 Let's get a value from a specific feature.
+
+.. code-block:: python
 
     >>> pt.feature('color')
     Black
@@ -94,6 +106,8 @@ we make multiple calls.*
 Although regular sentences are ignored when calling ``features`` attr, they can
 still be seen when calling ``sentences`` or ``text`` attr.
 
+.. code-block:: python
+
     >>> pt.sentences
     ['Color: Black.', 'Material: Aluminium.', 'Last Sentence.']
     >>> pt.text
@@ -105,6 +119,8 @@ In this example we will try to parse html text. There is not special argument to
 passed into ``parse_text`` in order to process HTML. Usage is exactly the same as
 for ``regular text`` since ``html`` is detected and processed automatically.
 
+.. code-block:: python
+
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
@@ -113,7 +129,7 @@ for ``regular text`` since ``html`` is detected and processed automatically.
 One of the best features of using ``parse_text`` on ``html`` is that it can extract
 table data into sentences. Lets get more info regarding this feature through example.
 
-.. code:: python
+.. code-block:: python
 
     from easytxt import parse_text
 
@@ -141,7 +157,7 @@ table data into sentences. Lets get more info regarding this feature through exa
 
 In example above following sentences will be printed.
 
-.. code:: python
+.. code-block:: python
 
     [
         'Some paragraph demo text.',
@@ -166,6 +182,8 @@ If we are parsing text in other language than english then we need to
 specify language parameter to which language our text belong to in order
 for sentences to be split properly around abbreviations.
 
+.. code-block:: python
+
     >>> test_text = 'primera oracion? Segunda oración. tercera oración'
     >>> pt = parse_text(test_text, language='es')
     >>> pt.sentences
@@ -179,6 +197,8 @@ are supported. *Support for more is coming soon...*
 In cases that we provide html string, we can with ``css_query`` parameter
 select from which html nodes text would get extracted.
 
+.. code-block:: python
+
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
     >>> pt = parse_text(test_text, css_query='p')
     >>> pt.sentences
@@ -188,6 +208,8 @@ select from which html nodes text would get extracted.
 
 In cases that we provide html string, we can through ``exclude_css`` parameter
 limit from which html nodes would be excluded from parsing.
+
+.. code-block:: python
 
     >>> test_text = '<p>Some sentence</p> <ul><li>* Easy <b>HD</b> camera </li></ul>'
     >>> pt = parse_text(test_text, exclude_css=['p', 'b'])
@@ -199,6 +221,8 @@ limit from which html nodes would be excluded from parsing.
 We can control which sentences we want to get extracted by providing list of
 keywords into ``allow`` parameter. Keys are not case sensitive.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, allow=['first', 'third'])
     >>> pt.sentences
@@ -206,12 +230,16 @@ keywords into ``allow`` parameter. Keys are not case sensitive.
 
 Regex pattern is also supported as parameter value:
 
+.. code-block:: python
+
     >>> pt = parse_text(test_text, allow=[r'\bfirst'])
 
 **callow**
 
 ``callow`` is similar to ``allow`` but with exception that provided keys
 are case sensitive. Regex pattern as key is also supported.
+
+.. code-block:: python
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, allow=['First', 'Third'])
@@ -223,6 +251,8 @@ are case sensitive. Regex pattern as key is also supported.
 We can skip sentences by providing keys in ``from_allow`` parameter.
 Keys are not case sensitive and regex pattern is also supported.
 
+.. code-block:: python
+
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, from_allow=['second'])
     >>> pt.sentences
@@ -233,12 +263,16 @@ Keys are not case sensitive and regex pattern is also supported.
 ``from_callow`` is similar to ``from_allow`` but with exception that
 provided keys are case sensitive. Regex pattern as key is also supported.
 
+.. code-block:: python
+
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, from_callow=['Second'])
     >>> pt.sentences
     ['Second txt.', 'Third Txt.', 'FOUR txt.']
 
 Lets recreate same example as before but with lowercase key.
+
+.. code-block:: python
 
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, from_callow=['second'])
@@ -251,6 +285,8 @@ Lets recreate same example as before but with lowercase key.
 are sentences skipped after provided key is found. Keys are not case
 sensitive and regex pattern is also supported.
 
+.. code-block:: python
+
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, to_allow=['four'])
     >>> pt.sentences
@@ -261,12 +297,16 @@ sensitive and regex pattern is also supported.
 ``to_callow`` is similar to ``to_allow`` but with exception that
 provided keys are case sensitive. Regex pattern is also supported.
 
+.. code-block:: python
+
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, to_callow=['FOUR'])
     >>> pt.sentences
     ['First txt.', 'Second txt.', 'Third Txt.']
 
 Lets recreate same example as before but with lowercase key.
+
+.. code-block:: python
 
     >>> test_text = 'First txt. Second txt. Third Txt. FOUR txt.'
     >>> pt = parse_text(test_text, to_callow=['four'])
@@ -279,6 +319,8 @@ We can control which sentences we don't want to get extracted by providing
 list of keywords into ``deny`` parameter. Keys are not case sensitive and
 regex pattern is also supported.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, deny=['first', 'third'])
     >>> pt.sentences
@@ -288,6 +330,8 @@ regex pattern is also supported.
 
 ``cdeny`` is similar to ``deny`` but with exception that provided keys
 are case sensitive. Regex pattern as a key is also supported.
+
+.. code-block:: python
 
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, deny=['First', 'Third'])
@@ -300,6 +344,8 @@ By default parameter ``normalize`` is set to ``True``. This means that any
 bad encoding will be automatically fixed, stops added and line breaks
 split into sentences.
 
+.. code-block:: python
+
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
     >>> pt = parse_text(test_text)
@@ -307,6 +353,8 @@ split into sentences.
     ['First sentence...', 'Bad ünicode.', 'HTML entities <3!']
 
 Lets try to set parameter ``normalize`` to ``False`` and see what happens.
+
+.. code-block:: python
 
     >>> from easytxt import parse_text
     >>> test_text = '  first sentence... Bad uÌˆnicode.   HTML entities &lt;3!'
@@ -318,12 +366,16 @@ Lets try to set parameter ``normalize`` to ``False`` and see what happens.
 
 By default all sentences will get capitalized as we can see bellow.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
     ['First sentence?', 'Second sentence.', 'third sentence.']
 
 We can disable this behaviour by setting parameter ``capitalize`` to ``False``.
+
+.. code-block:: python
 
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text, capitalize=False)
@@ -335,6 +387,8 @@ We can disable this behaviour by setting parameter ``capitalize`` to ``False``.
 We can set our text output to title by setting parameter ``title``
 to ``True``.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text, title=True)
     >>> pt.text
@@ -345,6 +399,8 @@ to ``True``.
 We can set our text output to uppercase by setting parameter ``uppercase``
 to ``True``.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text, uppercase=True)
     >>> pt.sentences
@@ -354,6 +410,8 @@ to ``True``.
 
 We can set our text output to lowercase by setting parameter ``lowercase``
 to ``True``.
+
+.. code-block:: python
 
     >>> test_text = 'first sentence? Second sentence. third sentence'
     >>> pt = parse_text(test_text, lowercase=True)
@@ -373,6 +431,8 @@ We can replace all chars in a sentences by providing tuple of search key and
 replacement char in a ``replace_keys`` parameter. Regex pattern as key is
 also supported and search keys are not case sensitive.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence! - second sentence.  Third'
     >>> pt = parse_text(test_text, replace_keys=[('third', 'Last'), ('nce!', 'nce?')])
     >>> pt.sentences
@@ -383,6 +443,8 @@ also supported and search keys are not case sensitive.
 We can remove all chars in sentences by providing list of search keys in a
 ``replace_keys`` parameter. Regex pattern as key is also supported and keys
 are not case sensitive.
+
+.. code-block:: python
 
     >>> test_text = 'first sentence! - second sentence.  Third'
     >>> pt = parse_text(test_text, remove_keys=['sentence', '!'])
@@ -400,6 +462,8 @@ is also accepted.
 Lets first show default result with badly structured text without
 setting keys into ``replace_keys_raw_text``.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook pro 15 Color: Gray Material: Aluminium'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
@@ -409,6 +473,8 @@ As we can see from the result test text is returned as one sentence
 due to missing stop keys (``.``) between sentences. Lets fix this by
 adding stop keys into unprocessed text before sentence splitting
 happens.
+
+.. code-block:: python
 
     >>> test_text = 'Easybook pro 15 Color: Gray Material: Aluminium'
     >>> replace_keys = [('Color:', '. Color:'), ('Material:', '. Material:')]
@@ -423,6 +489,7 @@ of tuples in order to replace chars, here we provide list of chars to remove
 keys. Lets try first on a sentence without setting keys to ``rremove_keys_raw_text``.
 Please note that keys are not case sensitive and regex as key is also accepted.
 
+.. code-block:: python
 
     >>> test_text = 'Easybook pro 15. Color: Gray'
     >>> pt = parse_text(test_text)
@@ -431,6 +498,8 @@ Please note that keys are not case sensitive and regex as key is also accepted.
 
 Text above due to stop key ``.`` was split into two sentences. Lets prevent this
 by removing color and stop key at the same time and get one sentence instead.
+
+.. code-block:: python
 
     >>> test_text = 'Easybook pro 15. Color: Gray'
     >>> pt = parse_text(test_text, remove_keys_raw_text=['. color:'])
@@ -444,6 +513,8 @@ into sentences.
 
 Example:
 
+.. code-block:: python
+
     >>> test_text = '- first param - second param'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
@@ -451,6 +522,8 @@ Example:
 
 In cases when we want to disable this behaviour, we can set parameter
 ``split_inline_breaks`` to ``False``.
+
+.. code-block:: python
 
     >>> test_text = '- first param - second param'
     >>> pt = parse_text(test_text, split_inline_breaks=False)
@@ -466,12 +539,16 @@ In above example we saw how default char breaks by default work. In cases when
 we want to split sentences by different char than default one, we can do so by
 providing list of chars into ``inline_breaks`` parameter.
 
+.. code-block:: python
+
     >>> test_text = '> first param > second param'
     >>> pt = parse_text(test_text, inline_breaks=['>'])
     >>> pt.sentences
     ['First param.', 'Second param.']
 
 Regex pattern is also supported as parameter value:
+
+.. code-block:: python
 
     >>> parse_text(test_text, inline_breaks=[r'\b>'])
 
@@ -480,6 +557,8 @@ Regex pattern is also supported as parameter value:
 If a sentence is without a stop key at the end, then by default it
 will automatically be appended ``.``. Let see this in bellow example:
 
+.. code-block:: python
+
     >>> test_text = 'First feature <br> second feature?'
     >>> pt = parse_text(test_text)
     >>> pt.sentences
@@ -487,6 +566,8 @@ will automatically be appended ``.``. Let see this in bellow example:
 
 We can change our default char ``.`` to a custom one by setting our
 desired char in a ``stop_key`` parameter.
+
+.. code-block:: python
 
     >>> test_text = 'First feature <br> second feature?'
     >>> pt = parse_text(test_text, stop_key='!')
@@ -500,6 +581,8 @@ are merged together.
 
 Lets see first default output in example bellow:
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text)
     >>> pt.text
@@ -510,6 +593,8 @@ Behind the scene simple ``join`` on a list of sentences is performed.
 Now lets change default value ``' '`` of ``sentence_separator`` to our
 custom one.
 
+.. code-block:: python
+
     >>> test_text = 'first sentence? Second sentence. Third sentence'
     >>> pt = parse_text(test_text, sentence_separator=' > ')
     >>> pt.text
@@ -519,6 +604,8 @@ custom one.
 
 We can convert all alpha chars that describe numeric values to actual
 numbers by setting ``text_num_to_numeric`` parameter to ``True``.
+
+.. code-block:: python
 
     >>> test_text = 'First Sentence. Two thousand and three has it. Three Sentences.'
     >>> pt = parse_text(test_text, text_num_to_numeric=True)
@@ -534,6 +621,8 @@ Invoked methods
 
 For examples bellow we will use following code as basis:
 
+.. code-block:: python
+
     >>> test_text = 'First txt. Second txt.'
     >>> pt = parse_text(test_text)
 
@@ -541,10 +630,14 @@ For examples bellow we will use following code as basis:
 
 Normally we would get text by calling ``text`` property:
 
+.. code-block:: python
+
     >>> pt.text
     'First txt. Second txt.'
 
 But we can avoid calling ``text`` property by ``str`` casting.
+
+.. code-block:: python
 
     >>> str(pt)
     'First txt. Second txt.'
@@ -553,21 +646,29 @@ But we can avoid calling ``text`` property by ``str`` casting.
 
 Normally we would get sentences by calling ``sentence`` property:
 
+.. code-block:: python
+
     >>> pt.sentences
     ['First txt.', 'Second txt.']
 
 But we can avoid calling ``sentence`` property and use it directly
 in iteration.
 
+.. code-block:: python
+
     >>> [sentence for sentence in pt]
     ['First txt.', 'Second txt.']
 
 Another alternative:
 
+.. code-block:: python
+
     >>> list(pt)
     ['First txt.', 'Second txt.']
 
 **__add__**
+
+.. code-block:: python
 
     >>> pt + 'hello world'
     >>> pt.sentences
@@ -578,6 +679,8 @@ Another alternative:
     ['First txt.', 'Second txt.', 'Hello', 'World!']
 
 **__radd__**
+
+.. code-block:: python
 
     >>> 'hello world' + pt
     >>> pt.sentences
@@ -599,12 +702,16 @@ Examples
 --------
 In this example lets process text with bad encoding.
 
+.. code-block:: python
+
     >>> from easytxt import parse_string
     >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
     >>> parse_string(test_text)
     Easybook Pro 13 <3 ünicode
 
 Floats, integers will get transformed to string automatically.
+
+.. code-block:: python
 
     >>> test_int = 123
     >>> parse_string(test_text)
@@ -622,6 +729,8 @@ As seen in example above, text normalization (bad encoding) is
 enabled by default through ``normalize`` parameter. Lets set ``normalize``
 parameter to ``False`` to disable text normalization.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook Pro 13 &lt;3 uÌˆnicode'
     >>> parse_string(test_text)
     Easybook Pro 13 &lt;3 uÌˆnicode
@@ -630,6 +739,8 @@ parameter to ``False`` to disable text normalization.
 
 We can capitalize first character in our string if needed by setting
 ``capitalize`` parameter to ``True``. By default is set to ``False``.
+
+.. code-block:: python
 
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, capitalize=True)
@@ -640,6 +751,8 @@ We can capitalize first character in our string if needed by setting
 We can set all first chars in a word uppercase while other chars in a word
 become lowercase with``title`` parameter set to ``True``.
 
+.. code-block:: python
+
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, title=True)
     Easybook Pro 15
@@ -649,6 +762,8 @@ become lowercase with``title`` parameter set to ``True``.
 We can set all chars in our string to uppercase by ``uppercase``
 parameter set to ``True``.
 
+.. code-block:: python
+
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, uppercase=True)
     EASYBOOK PRO 15
@@ -657,6 +772,8 @@ parameter set to ``True``.
 
 We can set all chars in our string to lowercase by ``lowercase``
 parameter set to ``True``.
+
+.. code-block:: python
 
     >>> test_text = 'easybook PRO 15'
     >>> parse_string(test_text, lowercase=True)
@@ -668,6 +785,8 @@ We can replace chars/words in a string through ``replace_chars`` parameter.
 ``replace_chars`` can accept regex pattern as a lookup key and is not
 case sensitive.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook Pro 15'
     >>> parse_string(test_text, replace_keys=[('pro', 'Air'), ('15', '13')])
     Easybook Air 13
@@ -678,6 +797,8 @@ We can remove chars/words in a string through ``remove_keys`` parameter.
 ``remove_keys`` can accept regex pattern as a lookup key and is not
 case sensitive.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook Pro 15'
     >>> parse_string(test_text, remove_keys=['easy', 'pro'])
     book 15
@@ -686,11 +807,15 @@ case sensitive.
 
 Text can be split by ``split_key``. By default split index is ``0``.
 
+.. code-block:: python
+
     >>> test_text = 'easybook-pro_13'
     >>> parse_string(test_text, split_key='-')
     easybook
 
 Lets specify split index through tuple.
+
+.. code-block:: python
 
     >>> test_text = 'easybook-pro_13'
     >>> parse_string(test_text, split_key=('-', -1))
@@ -701,24 +826,40 @@ Lets specify split index through tuple.
 ``split_keys`` work in a same way as ``split_key`` but instead of single
 split key it accepts list of keys.
 
+.. code-block:: python
 
     >>> test_text = 'easybook-pro_13'
     >>> parse_string(test_text, split_keys=[('-', -1), '_'])
     pro
 
-**max_chars**
+**take**
 
-With ``max_chars`` parameter we can limit maximum number that are shown
+With ``take`` parameter we can limit maximum number that are shown
 at the end result. Lets see how it works in example bellow.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook Pro 13'
-    >>> parse_string(test_text, max_chars=8)
+    >>> parse_string(test_text, take=8)
     Easybook
+
+**take**
+
+With ``skip`` parameter we can skip ignore defined number of chars.
+Lets see how it works in example bellow.
+
+.. code-block:: python
+
+    >>> test_text = 'Easybook Pro 13'
+    >>> parse_string(test_text, skip=8)
+    Pro 13
 
 **text_num_to_numeric**
 
 We can convert all alpha chars that describe numeric values to actual
 numbers by setting ``text_num_to_numeric`` parameter to ``True``.
+
+.. code-block:: python
 
     >>> test_text = 'two thousand and three words for the first time'
     >>> parse_string(test_text, text_num_to_numeric=True)
@@ -733,11 +874,15 @@ our ``language`` parameter. Currently supported languages are only
 By default all multiple spaces will be removed and left with only single
 one between chars. Lets test it in our bellow example:
 
+.. code-block:: python
+
     >>> test_text = 'Easybook   Pro  15'
     >>> parse_string(test_text)
     Easybook Pro 15
 
 Now lets change ``fix_spaces`` parameter to ``False`` and see what happens.
+
+.. code-block:: python
 
     >>> test_text = 'Easybook   Pro  15'
     >>> parse_string(test_text, fix_spaces=False)
@@ -748,11 +893,15 @@ Now lets change ``fix_spaces`` parameter to ``False`` and see what happens.
 By default all new line characters are converted to empty space as we can
 see in example bellow:
 
+.. code-block:: python
+
     >>> test_text = 'Easybook\nPro\n15'
     >>> parse_string(test_text)
     Easybook Pro 15
 
 Now lets change ``escape_new_lines`` parameter to ``False`` and see what happens.
+
+.. code-block:: python
 
     >>> test_text = 'Easybook\nPro\n15'
     >>> parse_string(test_text, escape_new_lines=False)
@@ -764,6 +913,8 @@ If ``escape_new_lines`` is set to ``True``, then by default all new line chars
 will be replaced by ``' '`` as seen in upper example. We can change this
 default setting by changing value of ``new_line_replacement`` parameter.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook\nPro\n15'
     >>> parse_string(test_text, new_line_replacement='<br>')
     Easybook<br>Pro<br>15
@@ -773,6 +924,8 @@ default setting by changing value of ``new_line_replacement`` parameter.
 We can add stop char at the end of the string by setting ``add_stop``
 parameter to ``True``.
 
+.. code-block:: python
+
     >>> test_text = 'Easybook Pro  15'
     >>> parse_string(test_text, add_stop=True)
     Easybook Pro 15.
@@ -780,6 +933,8 @@ parameter to ``True``.
 By default ``.`` is added but we can provide our custom char if needed. Instead
 of setting ``add_stop`` parameter to ``True``, we can instead of boolean value
 provide char as we can see in example bellow.
+
+.. code-block:: python
 
     >>> test_text = 'Easybook Pro  15'
     >>> parse_string(test_text, add_stop='!')
@@ -801,7 +956,7 @@ Examples
 In following examples we will use two tables. One with a header and one
 without it.
 
-.. code:: python
+.. code-block:: python
 
     from easytxt import parse_table
 
@@ -830,14 +985,14 @@ without it.
 
 In example above following row data will be printed.
 
-.. code:: python
+.. code-block:: python
 
     {'Type': 'Easybook Pro'}
     {'Operating system': 'etOS'}
 
 Alternatively we can get data also as sentences.
 
-.. code:: python
+.. code-block:: python
 
     print(pt.sentences)
 
@@ -848,7 +1003,7 @@ Alternatively we can get data also as sentences.
 
 Or a text.
 
-.. code:: python
+.. code-block:: python
 
     print(pt.text)
 
@@ -862,7 +1017,7 @@ column as header info.
 
 Lets make a test on a more complex table with a header and multiple columns.
 
-.. code:: python
+.. code-block:: python
 
     from easytxt import parse_table
 
@@ -899,7 +1054,7 @@ Lets make a test on a more complex table with a header and multiple columns.
 
 In example above following row data will be printed.
 
-.. code:: python
+.. code-block:: python
 
     {'Type': 'Easybook 15', 'OS': 'etOS', 'Color': 'Gray'}
     {'Type': 'Easyphone x1', 'OS': 'Mobile etOS', 'Color': 'Black'}
@@ -907,7 +1062,7 @@ In example above following row data will be printed.
 
 Lets get table data printed as sentences.
 
-.. code:: python
+.. code-block:: python
 
     print(pt.sentences)
 
@@ -919,7 +1074,7 @@ Lets get table data printed as sentences.
 
 Or a text.
 
-.. code:: python
+.. code-block:: python
 
     print(pt.text)
 
@@ -927,7 +1082,7 @@ Or a text.
 
 Lets get header keys only. It only works in a table with header nodes.
 
-.. code:: python
+.. code-block:: python
 
     print(pt.headers)
 
