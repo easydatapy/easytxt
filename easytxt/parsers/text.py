@@ -7,8 +7,8 @@ from easytxt import text as utext
 
 
 class TextParser:
-    cached_sentences = []
-    cached_features = []
+    cached_sentences: List[str] = []
+    cached_features: List[str] = []
 
     def __init__(
             self,
@@ -43,7 +43,7 @@ class TextParser:
             sentence_separator: str = ' ',
             feature_split_keys: Optional[List[str]] = None,
             text_num_to_numeric: bool = False,
-            autodetect_html: bool = True
+            autodetect_html: bool = True,
     ):
 
         self._text = text
@@ -113,7 +113,7 @@ class TextParser:
     def text(self) -> str:
         return sentences.to_text(
             sentences=self.sentences,
-            separator=self._sentence_separator
+            separator=self._sentence_separator,
         )
 
     @property
@@ -148,7 +148,7 @@ class TextParser:
             if re.search(
                 pattern=key,
                 string=feature_key,
-                flags=re.IGNORECASE
+                flags=re.IGNORECASE,
             ):
 
                 return feature_value
@@ -176,7 +176,7 @@ class TextParser:
         for raw_sentence in raw_sentences:
             raw_feature = utext.to_feature(
                 text=raw_sentence,
-                split_keys=self._feature_split_keys
+                split_keys=self._feature_split_keys,
             )
 
             raw_features.append(raw_feature)
@@ -197,26 +197,26 @@ class TextParser:
         if self._merge_sentences:
             raw_sentences = sentences.merge(
                 sentences=raw_sentences,
-                stop_keys_ignore=self._stop_keys_ignore
+                stop_keys_ignore=self._stop_keys_ignore,
             )
 
         if self._replace_keys:
             raw_sentences = sentences.replace_chars_by_keys(
                 sentences=raw_sentences,
-                replace_keys=self._replace_keys
+                replace_keys=self._replace_keys,
             )
 
         if self._remove_keys:
             raw_sentences = sentences.remove_chars_by_keys(
                 sentences=raw_sentences,
-                remove_keys=self._remove_keys
+                remove_keys=self._remove_keys,
             )
 
         raw_sentences = self._min_chars_limit(raw_sentences)
 
         raw_sentences = sentences.add_stop(
             sentences=raw_sentences,
-            stop_key=self._stop_key
+            stop_key=self._stop_key,
         )
 
         raw_sentences = self._sentences_manage_case(raw_sentences)
@@ -234,7 +234,7 @@ class TextParser:
         html_raw_sentences = html.to_sentences(
             html_text=raw_text,
             css_query=self._css_query,
-            exclude_css=self._exclude_css
+            exclude_css=self._exclude_css,
         )
 
         raw_sentences = []
@@ -257,7 +257,7 @@ class TextParser:
             stop_keys=self._stop_keys_split,
             split_inline_breaks=self._split_inline_breaks,
             inline_breaks=self._inline_breaks,
-            min_chars=self._min_chars
+            min_chars=self._min_chars,
         )
 
     def _filter_raw_sentences(self, raw_sentences: List[str]) -> List[str]:
@@ -267,7 +267,7 @@ class TextParser:
             raw_sentences = sentences.allow_contains(
                 sentences=raw_sentences,
                 keys=allow_keys,
-                case_sensitive=bool(self._callow)
+                case_sensitive=bool(self._callow),
             )
 
         from_allow_keys = self._from_allow or self._from_callow
@@ -276,7 +276,7 @@ class TextParser:
             raw_sentences = sentences.from_allow_contains(
                 sentences=raw_sentences,
                 keys=from_allow_keys,
-                case_sensitive=bool(self._from_callow)
+                case_sensitive=bool(self._from_callow),
             )
 
         to_allow_keys = self._to_allow or self._to_callow
@@ -285,7 +285,7 @@ class TextParser:
             raw_sentences = sentences.to_allow_contains(
                 sentences=raw_sentences,
                 keys=to_allow_keys,
-                case_sensitive=bool(self._to_callow)
+                case_sensitive=bool(self._to_callow),
             )
 
         deny_keys = self._cdeny or self._deny
@@ -294,7 +294,7 @@ class TextParser:
             raw_sentences = sentences.deny_contains(
                 sentences=raw_sentences,
                 keys=deny_keys,
-                case_sensitive=bool(self._cdeny)
+                case_sensitive=bool(self._cdeny),
             )
 
         return raw_sentences
@@ -325,7 +325,7 @@ class TextParser:
 
     def _convert_text_num_to_numeric_in_sentences(
             self,
-            raw_sentences: List[str]
+            raw_sentences: List[str],
     ) -> List[str]:
 
         return [
@@ -337,13 +337,13 @@ class TextParser:
         if self._replace_keys_raw_text:
             raw_text = utext.replace_chars_by_keys(
                 text=raw_text,
-                replace_keys=self._replace_keys_raw_text
+                replace_keys=self._replace_keys_raw_text,
             )
 
         if self._remove_keys_raw_text:
             raw_text = utext.remove_chars_by_keys(
                 text=raw_text,
-                remove_keys=self._remove_keys_raw_text
+                remove_keys=self._remove_keys_raw_text,
             )
 
         return raw_text

@@ -10,7 +10,7 @@ def from_text(
         stop_keys: Optional[List[str]] = None,
         split_inline_breaks: bool = True,
         inline_breaks: Optional[List[str]] = None,
-        min_chars: int = 5
+        min_chars: int = 5,
 ) -> List[str]:
 
     if not stop_keys:
@@ -24,7 +24,7 @@ def from_text(
 
     sentences = []
 
-    text_parts = []
+    text_parts: List[str] = []
 
     for raw_sentence in stop_re.split(raw_text):
         sentence = ''.join(text_parts)
@@ -46,7 +46,7 @@ def from_text(
     if split_inline_breaks:
         sentences = split_inline_breaks_to_sentences(
             sentences=sentences,
-            inline_breaks=inline_breaks
+            inline_breaks=inline_breaks,
         )
 
     return remove_empty(sentences)
@@ -54,7 +54,7 @@ def from_text(
 
 def merge(
         sentences: list,
-        stop_keys_ignore: Optional[List[str]] = None
+        stop_keys_ignore: Optional[List[str]] = None,
 ) -> List[str]:
 
     if stop_keys_ignore is None:
@@ -77,7 +77,7 @@ def merge(
 
 def add_stop(
         sentences: List[str],
-        stop_key: str = '.'
+        stop_key: str = '.',
 ) -> List[str]:
 
     return [utext.add_stop_key(sentence, stop_key) for sentence in sentences]
@@ -101,7 +101,7 @@ def lowercase(sentences: List[str]) -> List[str]:
 
 def replace_chars_by_keys(
         sentences: List[str],
-        replace_keys: list
+        replace_keys: list,
 ) -> List[str]:
 
     sentences = [utext.replace_chars_by_keys(sentence, replace_keys)
@@ -111,7 +111,7 @@ def replace_chars_by_keys(
 
 def remove_chars_by_keys(
         sentences: List[str],
-        remove_keys: list
+        remove_keys: list,
 ) -> List[str]:
 
     sentences = [utext.remove_chars_by_keys(sentence, remove_keys)
@@ -121,7 +121,7 @@ def remove_chars_by_keys(
 
 def split_inline_breaks_to_sentences(
         sentences: list,
-        inline_breaks: Optional[List[str]] = None
+        inline_breaks: Optional[List[str]] = None,
 ):
     if inline_breaks is None:
         inline_breaks = config.INLINE_BREAKS
@@ -130,7 +130,7 @@ def split_inline_breaks_to_sentences(
 
     inline_breaks_re = u'{}'.format('|'.join(inline_breaks))
 
-    new_sentences = []
+    new_sentences: List[str] = []
 
     for sentence in sentences:
         new_sentences = new_sentences + re.split(inline_breaks_re, sentence)
@@ -146,7 +146,7 @@ def remove_empty(sentences: list) -> List[str]:
 def allow_contains(
         sentences: List[str],
         keys=Union[List[str], str],
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ) -> List[str]:
 
     return [sentence for sentence in sentences
@@ -156,7 +156,7 @@ def allow_contains(
 def from_allow_contains(
         sentences: List[str],
         keys=Union[List[str], str],
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ):
 
     allowed_sentences = []
@@ -174,7 +174,7 @@ def from_allow_contains(
 def to_allow_contains(
         sentences: List[str],
         keys=Union[List[str], str],
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ):
 
     allowed_sentences = []
@@ -191,7 +191,7 @@ def to_allow_contains(
 def deny_contains(
         sentences: List[str],
         keys=Union[List[str], str],
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ) -> List[str]:
 
     return [sentence for sentence in sentences
@@ -200,7 +200,7 @@ def deny_contains(
 
 def to_text(
         sentences: List[str],
-        separator: str = ' '
+        separator: str = ' ',
 ) -> str:
 
     return separator.join(sentences)

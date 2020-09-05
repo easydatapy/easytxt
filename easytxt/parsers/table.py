@@ -17,7 +17,7 @@ class TableParser:
             cdeny_cols: Optional[List[str]] = None,
             separator: str = '; ',
             header: bool = True,
-            skip_row_without_value: bool = True
+            skip_row_without_value: bool = True,
     ):
 
         if isinstance(html_text, str):
@@ -41,28 +41,28 @@ class TableParser:
                 table_row_data = self._filter_allow_cols(
                     table_row_dict=table_row_data,
                     allow_cols=self._allow_cols,
-                    case_sensitive=False
+                    case_sensitive=False,
                 )
 
             if self._callow_cols:
                 table_row_data = self._filter_allow_cols(
                     table_row_dict=table_row_data,
                     allow_cols=self._callow_cols,
-                    case_sensitive=True
+                    case_sensitive=True,
                 )
 
             if self._deny_cols:
                 table_row_data = self._filter_deny_cols(
                     table_row_dict=table_row_data,
                     deny_cols=self._deny_cols,
-                    case_sensitive=False
+                    case_sensitive=False,
                 )
 
             if self._cdeny_cols:
                 table_row_data = self._filter_deny_cols(
                     table_row_dict=table_row_data,
                     deny_cols=self._cdeny_cols,
-                    case_sensitive=True
+                    case_sensitive=True,
                 )
 
             if not table_row_data:
@@ -125,7 +125,7 @@ class TableParser:
             self,
             table_row_dict: dict,
             allow_cols: Optional[List[str]],
-            case_sensitive: bool = False
+            case_sensitive: bool = False,
     ) -> dict:
 
         ignore_case = 0 if case_sensitive else re.IGNORECASE
@@ -144,7 +144,7 @@ class TableParser:
             self,
             table_row_dict: dict,
             deny_cols: Optional[List[str]],
-            case_sensitive: bool = False
+            case_sensitive: bool = False,
     ) -> dict:
 
         ignore_case = 0 if case_sensitive else re.IGNORECASE

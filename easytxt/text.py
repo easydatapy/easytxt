@@ -15,14 +15,14 @@ def capitalize_paragraph(text: str) -> str:
     return re.sub(
         r'([.?!]\s+|^)(\w+)',
         lambda m: m.group(1) + capitalize(m.group(2)),
-        text
+        text,
     )
 
 
 def replace_chars_by_key(
         text: str,
         replace_key: str,
-        replace_value: str
+        replace_value: str,
 ) -> str:
 
     if re.search(replace_key, text, flags=re.IGNORECASE):
@@ -30,7 +30,7 @@ def replace_chars_by_key(
             replace_key,
             replace_value,
             text,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
 
     return text
@@ -38,7 +38,7 @@ def replace_chars_by_key(
 
 def replace_chars_by_keys(
         text: str,
-        replace_keys: List[Tuple[str, str]]
+        replace_keys: List[Tuple[str, str]],
 ) -> str:
 
     for replace_key_tuple in replace_keys:
@@ -47,7 +47,7 @@ def replace_chars_by_keys(
         text: str = replace_chars_by_key(
             text=text,
             replace_key=replace_key,
-            replace_value=replace_value
+            replace_value=replace_value,
         )
 
     return text
@@ -55,7 +55,7 @@ def replace_chars_by_keys(
 
 def remove_chars_by_keys(
         text: str,
-        remove_keys: List[str]
+        remove_keys: List[str],
 ):
 
     text_replacements = [(rc, '') for rc in remove_keys]
@@ -73,7 +73,7 @@ def has_stop_key(text: str) -> bool:
 
 def endswith_key(
         text: str,
-        endswith_keys: Union[str, list]
+        endswith_keys: Union[str, list],
 ) -> bool:
 
     if isinstance(endswith_keys, str):
@@ -84,7 +84,7 @@ def endswith_key(
 
 def add_stop_key(
         text: str,
-        stop_key: str = '.'
+        stop_key: str = '.',
 ) -> str:
 
     if not has_stop_key(text):
@@ -95,7 +95,7 @@ def add_stop_key(
 
 def remove_stop_key(
         text: str,
-        stop_keys=None
+        stop_keys=None,
 ) -> str:
 
     if stop_keys is None:
@@ -117,7 +117,7 @@ def remove_stop_key(
 def contains(
         text: str,
         keys: Union[List[str], str],
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ) -> bool:
 
     if isinstance(keys, str):
@@ -139,7 +139,7 @@ def normalize_spaces(text: str) -> str:
 
 def normalize_breaks(
         text: str,
-        append_stops: bool = True
+        append_stops: bool = True,
 ) -> str:
 
     sentences = []
@@ -160,7 +160,7 @@ def normalize(
         text: str,
         fix_spaces: bool = True,
         escape_new_lines: bool = False,
-        new_line_replacement: str = ' '
+        new_line_replacement: str = ' ',
 
 ) -> str:
 
@@ -171,7 +171,7 @@ def normalize(
     if escape_new_lines:
         text = normalize_new_lines(
             text=text,
-            new_line_replacement=new_line_replacement
+            new_line_replacement=new_line_replacement,
         )
 
     if fix_spaces:
@@ -180,7 +180,12 @@ def normalize(
     return text.replace(':.', ':').strip()
 
 
-def take(text: str, limit: int, strip=True):
+def take(
+        text: str,
+        limit: int,
+        strip: bool = True,
+) -> str:
+
     if limit == 0:
         raise ValueError('take limit cannot be 0!')
 
@@ -192,7 +197,12 @@ def take(text: str, limit: int, strip=True):
     return text.strip() if strip else text
 
 
-def skip(text: str, limit: int, strip=True):
+def skip(
+    text: str,
+    limit: int,
+    strip: bool = True,
+) -> str:
+
     if limit > len(text):
         return ''
 
@@ -203,7 +213,7 @@ def skip(text: str, limit: int, strip=True):
 
 def remove_inline_breaks(
         text: str,
-        inline_breaks: List[str]
+        inline_breaks: List[str],
 ) -> str:
 
     text = text.strip()
@@ -219,7 +229,7 @@ def remove_inline_breaks(
 
 def normalize_new_lines(
         text: str,
-        new_line_replacement: str = ' '
+        new_line_replacement: str = ' ',
 ) -> str:
 
     return text.replace('\n', new_line_replacement)
@@ -227,7 +237,7 @@ def normalize_new_lines(
 
 def to_feature(
     text: str,
-    split_keys: Optional[List[str]] = None
+    split_keys: Optional[List[str]] = None,
 ) -> Union[str, Tuple[str, str]]:
 
     if split_keys is None:
@@ -247,7 +257,7 @@ def to_feature(
 
         return (
             remove_stop_key(feature_key.strip()),
-            remove_stop_key(feature_value.strip())
+            remove_stop_key(feature_value.strip()),
         )
 
     return text
@@ -257,7 +267,7 @@ def split_by_key(
         text: str,
         split_key: str,
         split_index: int = 0,
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ) -> str:
 
     ignore_case = 0 if case_sensitive else re.IGNORECASE
@@ -268,7 +278,7 @@ def split_by_key(
 def split_by_keys(
         text: str,
         split_keys: list,
-        case_sensitive: bool = False
+        case_sensitive: bool = False,
 ) -> str:
 
     for split_key in split_keys:
@@ -281,7 +291,7 @@ def split_by_keys(
             text=text,
             split_key=sk,
             split_index=si,
-            case_sensitive=case_sensitive
+            case_sensitive=case_sensitive,
         )
 
     return text
@@ -289,7 +299,7 @@ def split_by_keys(
 
 def to_str(
         value: Any,
-        default: Optional[str] = ''
+        default: Optional[str] = '',
 ):
 
     if value is None:
@@ -301,15 +311,18 @@ def to_str(
     return value
 
 
-def to_numeric_from_text_num(text: str, language='en'):
+def to_numeric_from_text_num(
+        text: str,
+        language='en',
+) -> str:
     return parse(text, language=language)
 
 
 def to_list(
         value: Any,
         split_key: Optional[str] = None,
-        multiply_keys: Optional[Union[list, tuple]] = None
-):
+        multiply_keys: Optional[Union[list, tuple]] = None,
+) -> List[str]:
 
     if not value:
         return value
