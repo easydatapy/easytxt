@@ -1,12 +1,32 @@
-.idea
-\#*\#
-.\#*
-*.egg-info
 *.py[co]
-.ecr_push_completed
-.ecr_push_failed
-.init.d
-dropin.cache
-docs/_build
+
+# Packages
+*.egg
+*.eggs
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
 .pytest_cache/
-*~
+.coverage
+htmlcov
+.tox
+
+# Sphinx
+docs/_build
+
+# Editors
+.idea
