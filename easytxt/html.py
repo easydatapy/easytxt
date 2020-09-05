@@ -9,10 +9,10 @@ from easytxt.parsers.table import TableParser
 
 
 def to_sentences(
-        html_text: str,
-        css_query: Optional[str] = None,
-        exclude_css: Optional[Union[List[str], str]] = None,
-        max_chars: int = 1
+    html_text: str,
+    css_query: Optional[str] = None,
+    exclude_css: Optional[Union[List[str], str]] = None,
+    max_chars: int = 1,
 ) -> List[str]:
 
     pq_object = PyQuery(html_text)
@@ -22,8 +22,8 @@ def to_sentences(
 
     # remove scripts and styles otherwise there could be errors when
     # converting html to text
-    pq_object.remove('script')
-    pq_object.remove('style')
+    pq_object.remove("script")
+    pq_object.remove("style")
 
     if exclude_css:
         if isinstance(exclude_css, str):
@@ -34,20 +34,20 @@ def to_sentences(
 
     raw_sentences = _to_raw_sentences(
         html_text=pq_object,
-        max_chars=max_chars
+        max_chars=max_chars,
     )
 
     sentences = []
 
     for raw_sentence in raw_sentences:
-        sentences += raw_sentence.split('<break>')
+        sentences += raw_sentence.split("<break>")
 
     return sentences
 
 
 def _to_raw_sentences(
-        html_text: Union[str, PyQuery],
-        max_chars: int = 1
+    html_text: Union[str, PyQuery],
+    max_chars: int = 1,
 ) -> List[str]:
 
     pq = to_pq(html_text)
@@ -60,7 +60,7 @@ def _to_raw_sentences(
     if _pq_has_only_inline_tags(pq):
         inline_raw_sentences = _pq_content_to_sentences(pq)
 
-        raw_sentences.append(' '.join(inline_raw_sentences))
+        raw_sentences.append(" ".join(inline_raw_sentences))
     else:
         raw_sentences += _pq_content_to_sentences(pq, raw_sentences)
 
@@ -72,7 +72,7 @@ def validate(text: str) -> bool:
 
 
 def validate_html_table(text: str) -> bool:
-    return bool(re.search('(<th>|<td>)', text, re.IGNORECASE))
+    return bool(re.search("(<th>|<td>)", text, re.IGNORECASE))
 
 
 def to_pq(html_text: Union[str, PyQuery]) -> PyQuery:
@@ -83,26 +83,26 @@ def to_pq(html_text: Union[str, PyQuery]) -> PyQuery:
 
 
 def _pq_content_to_sentences(
-        pq: PyQuery,
-        raw_sentences: Optional[List[str]] = None
+    pq: PyQuery,
+    raw_sentences: Optional[List[str]] = None,
 ) -> List[str]:
 
     if not raw_sentences:
         raw_sentences = []
 
     for el in pq.contents():
-        if isinstance(el, etree._Element) and el.tag == 'br':
-            el = '<break>'
+        if isinstance(el, etree._Element) and el.tag == "br":
+            el = "<break>"
 
         if isinstance(el, etree._Element) and _has_table_tag(el.tag):
-            if el.tag != 'table':
+            if el.tag != "table":
                 table_html = pq.outer_html()
             else:
                 table_html = PyQuery(el).outer_html()
 
             raw_sentences += TableParser(table_html).sentences
 
-            if el.tag != 'table':
+            if el.tag != "table":
                 break
 
         elif isinstance(el, str):
@@ -119,4 +119,4 @@ def _pq_has_only_inline_tags(pq: PyQuery) -> bool:
 
 
 def _has_table_tag(tag: str) -> bool:
-    return tag in ['table', 'tr', 'td', 'th', 'tbody', 'thead']
+    return tag in ["table", "tr", "td", "th", "tbody", "thead"]
