@@ -1,5 +1,4 @@
 from easytxt import sentences
-
 from tests.factory import raw_sentences_samples
 
 

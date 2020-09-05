@@ -1,7 +1,6 @@
 import pytest
 
 from easytxt.parsers import parse_string
-
 from tests.factory import string_samples
 
 

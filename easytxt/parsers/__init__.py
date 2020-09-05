@@ -4,26 +4,26 @@ from easytxt import text as utext
 
 
 def parse_string(
-        raw_text: Optional[Union[str, float, int, bytes]],
-        normalize: bool = True,
-        capitalize: bool = False,
-        title: bool = False,
-        uppercase: bool = False,
-        lowercase: bool = False,
-        replace_keys: Optional[list] = None,
-        remove_keys: Optional[list] = None,
-        split_key: Optional[Union[str, tuple]] = None,
-        split_keys: Optional[List[Union[str, tuple]]] = None,
-        take: Optional[int] = None,
-        take_strip: bool = True,
-        skip: Optional[int] = None,
-        skip_strip: bool = True,
-        text_num_to_numeric: bool = False,
-        language: str = 'en',
-        fix_spaces: bool = True,
-        escape_new_lines: bool = True,
-        new_line_replacement: str = ' ',
-        add_stop: Optional[Union[bool, str]] = None,
+    raw_text: Optional[Union[str, float, int, bytes]],
+    normalize: bool = True,
+    capitalize: bool = False,
+    title: bool = False,
+    uppercase: bool = False,
+    lowercase: bool = False,
+    replace_keys: Optional[list] = None,
+    remove_keys: Optional[list] = None,
+    split_key: Optional[Union[str, tuple]] = None,
+    split_keys: Optional[List[Union[str, tuple]]] = None,
+    take: Optional[int] = None,
+    take_strip: bool = True,
+    skip: Optional[int] = None,
+    skip_strip: bool = True,
+    text_num_to_numeric: bool = False,
+    language: str = "en",
+    fix_spaces: bool = True,
+    escape_new_lines: bool = True,
+    new_line_replacement: str = " ",
+    add_stop: Optional[Union[bool, str]] = None,
 ) -> str:
 
     split_keys = [split_key] if split_key else split_keys
@@ -67,26 +67,23 @@ def parse_string(
     )
 
     if add_stop:
-        if add_stop is True:
-            stop_key = '.'
+        if isinstance(add_stop, bool):
+            stop_key = "."
         else:
             stop_key = add_stop
 
-        raw_text = utext.add_stop_key(
-            text=raw_text,
-            stop_key=stop_key
-        )
+        raw_text = utext.add_stop_key(text=raw_text, stop_key=stop_key)
 
     return raw_text
 
 
 def _parse_string_chars(
-        raw_text: str,
-        replace_keys: Optional[list] = None,
-        remove_keys: Optional[list] = None,
-        split_keys: Optional[List[Union[str, tuple]]] = None,
-        text_num_to_numeric: bool = False,
-        language: str = 'en',
+    raw_text: str,
+    replace_keys: Optional[list] = None,
+    remove_keys: Optional[list] = None,
+    split_keys: Optional[List[Union[str, tuple]]] = None,
+    text_num_to_numeric: bool = False,
+    language: str = "en",
 ) -> str:
 
     if replace_keys:
@@ -117,11 +114,11 @@ def _parse_string_chars(
 
 
 def _parse_string_case(
-        raw_text: str,
-        capitalize: bool = False,
-        title: bool = False,
-        uppercase: bool = False,
-        lowercase: bool = False,
+    raw_text: str,
+    capitalize: bool = False,
+    title: bool = False,
+    uppercase: bool = False,
+    lowercase: bool = False,
 ) -> str:
 
     if capitalize:
@@ -137,11 +134,11 @@ def _parse_string_case(
 
 
 def _parse_string_char_limit(
-        raw_text: str,
-        take: Optional[int] = None,
-        take_strip: bool = True,
-        skip: Optional[int] = None,
-        skip_strip: bool = True,
+    raw_text: str,
+    take: Optional[int] = None,
+    take_strip: bool = True,
+    skip: Optional[int] = None,
+    skip_strip: bool = True,
 ) -> str:
 
     if take and raw_text:

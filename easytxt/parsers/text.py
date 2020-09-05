@@ -1,49 +1,48 @@
 import re
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Tuple, Union
 
-from easytxt import html
-from easytxt import sentences
+from easytxt import html, sentences
 from easytxt import text as utext
 
 
 class TextParser:
     cached_sentences: List[str] = []
-    cached_features: List[str] = []
+    cached_features: List[Union[str, Tuple[str, str]]] = []
 
     def __init__(
-            self,
-            text: Optional[Union[str, float, int]] = None,
-            language: str = 'en',
-            css_query: Optional[str] = None,
-            exclude_css: Optional[Union[List[str], str]] = None,
-            allow: Optional[Union[str, List[str]]] = None,
-            callow: Optional[Union[str, List[str]]] = None,
-            from_allow: Optional[Union[str, List[str]]] = None,
-            from_callow: Optional[Union[str, List[str]]] = None,
-            to_allow: Optional[Union[str, List[str]]] = None,
-            to_callow: Optional[Union[str, List[str]]] = None,
-            deny: Optional[Union[str, List[str]]] = None,
-            cdeny: Optional[Union[str, List[str]]] = None,
-            normalize: bool = True,
-            capitalize: bool = True,
-            title: bool = False,
-            uppercase: bool = False,
-            lowercase: bool = False,
-            min_chars: int = 5,
-            replace_keys: Optional[list] = None,
-            remove_keys: Optional[list] = None,
-            replace_keys_raw_text: Optional[list] = None,
-            remove_keys_raw_text: Optional[list] = None,
-            split_inline_breaks: bool = True,
-            inline_breaks: Optional[List[str]] = None,
-            merge_sentences: bool = True,
-            stop_key: str = '.',
-            stop_keys_split: Optional[List[str]] = None,
-            stop_keys_ignore: Optional[List[str]] = None,
-            sentence_separator: str = ' ',
-            feature_split_keys: Optional[List[str]] = None,
-            text_num_to_numeric: bool = False,
-            autodetect_html: bool = True,
+        self,
+        text: Optional[Union[str, float, int]] = None,
+        language: str = "en",
+        css_query: Optional[str] = None,
+        exclude_css: Optional[Union[List[str], str]] = None,
+        allow: Optional[Union[str, List[str]]] = None,
+        callow: Optional[Union[str, List[str]]] = None,
+        from_allow: Optional[Union[str, List[str]]] = None,
+        from_callow: Optional[Union[str, List[str]]] = None,
+        to_allow: Optional[Union[str, List[str]]] = None,
+        to_callow: Optional[Union[str, List[str]]] = None,
+        deny: Optional[Union[str, List[str]]] = None,
+        cdeny: Optional[Union[str, List[str]]] = None,
+        normalize: bool = True,
+        capitalize: bool = True,
+        title: bool = False,
+        uppercase: bool = False,
+        lowercase: bool = False,
+        min_chars: int = 5,
+        replace_keys: Optional[list] = None,
+        remove_keys: Optional[list] = None,
+        replace_keys_raw_text: Optional[list] = None,
+        remove_keys_raw_text: Optional[list] = None,
+        split_inline_breaks: bool = True,
+        inline_breaks: Optional[List[str]] = None,
+        merge_sentences: bool = True,
+        stop_key: str = ".",
+        stop_keys_split: Optional[List[str]] = None,
+        stop_keys_ignore: Optional[List[str]] = None,
+        sentence_separator: str = " ",
+        feature_split_keys: Optional[List[str]] = None,
+        text_num_to_numeric: bool = False,
+        autodetect_html: bool = True,
     ):
 
         self._text = text
@@ -165,7 +164,7 @@ class TextParser:
         return None
 
     @property
-    def raw_features(self) -> List[str]:
+    def raw_features(self) -> List[Union[str, Tuple[str, str]]]:
         if self.cached_features:
             return self.cached_features
 
@@ -237,12 +236,10 @@ class TextParser:
             exclude_css=self._exclude_css,
         )
 
-        raw_sentences = []
+        raw_sentences: List[str] = []
 
         for html_raw_sentence in html_raw_sentences:
-            raw_sentences += self._text_to_raw_sentences(
-                html_raw_sentence
-            )
+            raw_sentences += self._text_to_raw_sentences(html_raw_sentence)
 
         return raw_sentences
 
@@ -324,8 +321,8 @@ class TextParser:
         return raw_sentences
 
     def _convert_text_num_to_numeric_in_sentences(
-            self,
-            raw_sentences: List[str],
+        self,
+        raw_sentences: List[str],
     ) -> List[str]:
 
         return [

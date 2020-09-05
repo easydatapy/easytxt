@@ -1,9 +1,7 @@
 import pytest
 
 from easytxt import parse_text
-
-from tests.factory import features_samples
-from tests.factory import sentences_samples
+from tests.factory import features_samples, sentences_samples
 from tests.parsers import test_table
 
 features_test_text = "- color: Black - material: Aluminium"
