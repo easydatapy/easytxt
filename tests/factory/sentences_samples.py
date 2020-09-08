@@ -1,5 +1,15 @@
 english = [
     (
+        '<div class="prod2"><div class="name">Dell Latitude D610-1.73 Laptop '
+        "Wireless Computer</div>2 GHz INTEL Pentium M, 1 GB DDR2 SDRAM, 40 GB"
+        ", Microsoft Windows XP Professional</div>",
+        [
+            "Dell Latitude D610-1.73 Laptop Wireless Computer.",
+            "2 GHz INTEL Pentium M, 1 GB DDR2 SDRAM, 40 GB, Microsoft Windows XP "
+            "Professional.",
+        ],
+    ),
+    (
         "Mr. John and Ms. Sarah are here. Say hello!!!",
         ["Mr. John and Ms. Sarah are here.", "Say hello!!!"],
     ),
@@ -138,5 +148,9 @@ english = [
                 "rcourt'."
             )
         ],
+    ),
+    (
+        "<div>One <strong>level</strong></div>second text",
+        ["One level.", "Second text."],
     ),
 ]
