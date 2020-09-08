@@ -2,21 +2,33 @@
 Welcome to EasyTXT documentation!
 =================================
 
+.. image:: https://github.com/sitegroove/easydata/workflows/main/badge.svg?style=flat-square
+    :target: https://github.com/sitegroove/easytxt/actions?query=workflow%3Amain
+    :alt: Build status
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    :alt: code style black
+
+.. image:: https://badge.fury.io/py/easytxt.svg?style=flat-square
+    :target: https://pypi.org/project/easytxt/
+    :alt: pypi package version
+
 EasyTXT is a set of high and low level modules to help you with text
 normalization and manipulation.
 
-**PLEASE NOTE:** *EasyTXT is still in alpha stage and some functionalities
-could change without deprecation warning, although in current stage this is less
+**PLEASE NOTE:** *EasyTXT is still in alpha stage and certain functionalities
+could change without deprecation warning, although in the current stage this is less
 likely and class parameters should remain the same. For now it's discouraged
-to use it in production (if so, then on your own risk) and is for testing
-purposes only.*
+to use it in production (if so, then on your own risk) and it's current usage is
+for testing purposes only.*
 
 .. contents::
 
 Features
 ========
 
-Some of the most important features that EasyTXT provide:
+Some of the most important features that EasyTXT does:
 
 * normalizes text
 * break text into normalized sentences
@@ -31,7 +43,7 @@ Some of the most important features that EasyTXT provide:
 * ...
 
 There are many more features regarding which, please refer to the documentation
-with lots of examples bellow.
+bellow.
 
 Installation
 ============
@@ -46,12 +58,12 @@ parse_text
 
 Text examples
 -------------
-In this example lets parse badly structured text and output it into multiple
+In this example lets parse badly structured text and output it into a multiple
 formats.
 
 Please note that calling multiple formats at the same time won't affect
 performance since sentences are cached and when calling other formats,
-cached sentences will be used in a process.
+cached sentences will be instead used in a process.
 
 .. code-block:: python
 
@@ -75,8 +87,8 @@ Here is example how to extract features from text.
     >>> test_text = '- color: Black - material: Aluminium. Last Sentence'
     >>> pt = parse_text(test_text)
 
-Text parser will try to automatically detect which are regular sentences and which
-are features and show only extracted features when called ``features`` attr. By
+The text parser will try to automatically detect which are regular sentences or
+features and show only extracted features when called ``features`` attribute. By
 default features would get capitalized in a same way as sentences.
 
 .. code-block:: python
@@ -98,13 +110,13 @@ Let's get a value from a specific feature.
     >>> pt.feature('color')
     Black
 
-*We don't need to call ``features`` property first in order to get value
+*We don't need to call ``features`` property first to get value
 with ``feature`` since this is already done in a background. Features are
 also cached in a similar way as sentences to increase performance in a case
 we make multiple calls.*
 
 Although regular sentences are ignored when calling ``features`` attr, they can
-still be seen when calling ``sentences`` or ``text`` attr.
+still be returned when calling ``sentences`` or ``text`` attr.
 
 .. code-block:: python
 
@@ -115,9 +127,9 @@ still be seen when calling ``sentences`` or ``text`` attr.
 
 HTML examples
 -------------
-In this example we will try to parse html text. There is not special argument to be
-passed into ``parse_text`` in order to process HTML. Usage is exactly the same as
-for ``regular text`` since ``html`` is detected and processed automatically.
+In this example we will try to parse html text. There is not special parameter for
+``parse_text`` in order to process HTML. Usage is exactly the same as for
+``regular text`` since ``html`` is detected and processed automatically.
 
 .. code-block:: python
 
@@ -127,7 +139,7 @@ for ``regular text`` since ``html`` is detected and processed automatically.
     ['Some sentence.', 'Easy HD camera.']
 
 One of the best features of using ``parse_text`` on ``html`` is that it can extract
-table data into sentences. Lets get more info regarding this feature through example.
+table data into sentences. Lets get more info about this feature through example.
 
 .. code-block:: python
 
