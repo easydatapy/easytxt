@@ -51,7 +51,7 @@ Installation
 
     pip install easytxt
 
-easytxt requires Python 3.6+.
+easytxt requires Python 3.8+.
 
 parse_text
 ==========
