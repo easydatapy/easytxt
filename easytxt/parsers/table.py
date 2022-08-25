@@ -116,6 +116,9 @@ class TableParser:
         return next(self._iter_list())
 
     def has_header(self) -> bool:
+        if self._pq("th ~ td"):
+            return False
+
         if self._pq("tbody") and not self._pq("thead"):
             return False
 
