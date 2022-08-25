@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from easytxt.parsers import parse_string
 from easytxt.parsers.table import TableParser
