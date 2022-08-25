@@ -1,4 +1,5 @@
 import pytest
+from pyquery import PyQuery
 
 from easytxt import parse_text
 from tests.factory import features_samples, sentences_samples
@@ -16,6 +17,11 @@ test_text_sentences_v3 = "First txt. Second txt. 3 Txt. FOUR txt."
 @pytest.mark.parametrize("test_data, result", sentences_samples.english)
 def test_parse_text_to_sentences(test_data, result):
     assert parse_text(test_data).sentences == result
+
+
+@pytest.mark.parametrize("test_data, result", sentences_samples.english)
+def test_parse_text_to_sentences_with_pyquery(test_data, result):
+    assert parse_text(PyQuery(test_data)).sentences == result
 
 
 @pytest.mark.parametrize("test_data, result", sentences_samples.english)

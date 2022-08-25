@@ -1,6 +1,8 @@
 import re
 from typing import List, Optional, Tuple, Union
 
+from pyquery import PyQuery
+
 from easytxt import html, sentences
 from easytxt import text as utext
 
@@ -11,7 +13,7 @@ class TextParser:
 
     def __init__(
         self,
-        text: Optional[Union[str, float, int]] = None,
+        text: Optional[Union[str, float, int, PyQuery]] = None,
         language: str = "en",
         css_query: Optional[str] = None,
         exclude_css: Optional[Union[List[str], str]] = None,
@@ -185,8 +187,10 @@ class TextParser:
         return self.cached_features
 
     def _text_to_sentences(self):
-        if self._autodetect_html and html.validate(self._text):
-            raw_sentences = self._html_text_to_raw_sentences(self._text)
+        if isinstance(self._text, PyQuery):
+            raw_sentences = self._html_data_to_raw_sentences(self._text)
+        elif self._autodetect_html and html.validate(self._text):
+            raw_sentences = self._html_data_to_raw_sentences(self._text)
         else:
             raw_sentences = self._text_to_raw_sentences(self._text)
 
@@ -227,11 +231,13 @@ class TextParser:
 
         return raw_sentences
 
-    def _html_text_to_raw_sentences(self, html_raw_text: str) -> List[str]:
-        raw_text = self._manage_keys_raw_text(html_raw_text)
+    def _html_data_to_raw_sentences(
+        self,
+        html_raw_data: Union[str, PyQuery],
+    ) -> List[str]:
 
         html_raw_sentences = html.to_sentences(
-            html_text=raw_text,
+            html_data=html_raw_data,
             css_query=self._css_query,
             exclude_css=self._exclude_css,
         )

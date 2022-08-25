@@ -9,13 +9,16 @@ from easytxt.parsers.table import TableParser
 
 
 def to_sentences(
-    html_text: str,
+    html_data: Union[str, PyQuery],
     css_query: Optional[str] = None,
     exclude_css: Optional[Union[List[str], str]] = None,
     max_chars: int = 1,
 ) -> List[str]:
 
-    pq_object = PyQuery(html_text)
+    if isinstance(html_data, PyQuery):
+        pq_object = html_data
+    else:
+        pq_object = PyQuery(html_data)
 
     if css_query:
         pq_object = pq_object(css_query)

@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Tuple, Union
 
 from ftfy import fix_text
 from number_parser import parse
+from pyquery import PyQuery
 
 from easytxt import config
 
@@ -300,6 +301,9 @@ def to_str(
     value: Any,
     default: str = "",
 ) -> str:
+
+    if isinstance(value, PyQuery):
+        value = value.text()
 
     if value is None:
         return default

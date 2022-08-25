@@ -1,10 +1,12 @@
 from typing import List, Optional, Union
 
+from pyquery import PyQuery
+
 from easytxt import text as utext
 
 
 def parse_string(
-    raw_text: Optional[Union[str, float, int, bytes]],
+    raw_text: Optional[Union[str, float, int, bytes, PyQuery]],
     normalize: bool = True,
     capitalize: bool = False,
     title: bool = False,

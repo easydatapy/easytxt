@@ -1,4 +1,5 @@
 import pytest
+from pyquery import PyQuery
 
 from easytxt.parsers import parse_string
 from tests.factory import string_samples
@@ -7,6 +8,11 @@ from tests.factory import string_samples
 @pytest.mark.parametrize("test_data, result", string_samples.english)
 def test_parse_string(test_data, result):
     assert parse_string(test_data) == result
+
+
+@pytest.mark.parametrize("test_data, result", string_samples.english[0:4])
+def test_parse_string_with_pyquery(test_data, result):
+    assert parse_string(PyQuery(test_data)) == result
 
 
 def test_parse_string_normalize_false():
