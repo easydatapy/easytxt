@@ -2,8 +2,7 @@ import pytest
 from pyquery import PyQuery
 
 from easytxt import parse_text
-from tests.factory import features_samples, sentences_samples
-from tests.parsers import test_table
+from tests.factory import features_samples, sentences_samples, table_samples
 
 features_test_text = "- color: Black - material: Aluminium"
 test_text_sentences = "first sentence! - second sentence.  Third"
@@ -315,15 +314,15 @@ def test_parse_text_remove_keys_raw_text():
 
 
 def test_parse_text_html_table():
-    tp = parse_text(test_table.table_without_header_v3)
+    tp = parse_text(table_samples.table_without_header_v3)
     expected_results = ["Type: Easybook Pro.", "Operating system: etOS."]
     assert tp.sentences == expected_results
 
-    tp = parse_text(test_table.table_with_header)
+    tp = parse_text(table_samples.table_with_header)
     expected_results = ["Height/Width/Depth: 10/12/5.", "Height/Width/Depth: 2/3/5."]
     assert tp.sentences == expected_results
 
-    tp = parse_text(test_table.table_without_header_v2)
+    tp = parse_text(table_samples.table_without_header_v2)
     assert tp.sentences == ["Height: 2; 4.", "Width: 3; 8."]
 
     # Check if text with no html table returns empty string
