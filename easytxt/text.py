@@ -303,7 +303,7 @@ def to_str(
 ) -> str:
 
     if isinstance(value, PyQuery):
-        value = value.text()
+        value = value.eq(0).text() if value else None
 
     if value is None:
         return default
