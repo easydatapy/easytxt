@@ -4,6 +4,8 @@ from pyquery import PyQuery
 
 from easytxt import text as utext
 
+__all__ = ("parse_string",)
+
 
 def parse_string(
     raw_text: Optional[Union[str, float, int, bytes, PyQuery]],

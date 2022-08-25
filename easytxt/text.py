@@ -7,6 +7,32 @@ from pyquery import PyQuery
 
 from easytxt import config
 
+__all__ = (
+    "capitalize",
+    "capitalize_paragraph",
+    "replace_chars_by_key",
+    "replace_chars_by_keys",
+    "remove_chars_by_keys",
+    "has_stop_key",
+    "endswith_key",
+    "add_stop_key",
+    "remove_stop_key",
+    "contains",
+    "normalize_spaces",
+    "normalize_breaks",
+    "normalize",
+    "take",
+    "skip",
+    "remove_inline_breaks",
+    "normalize_new_lines",
+    "to_feature",
+    "split_by_key",
+    "split_by_keys",
+    "to_str",
+    "to_numeric_from_text_num",
+    "to_list",
+)
+
 
 def capitalize(text: str) -> str:
     return text[0].upper() + text[1:]

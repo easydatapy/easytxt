@@ -7,6 +7,13 @@ from pyquery import PyQuery
 from easytxt.config import HTML_RE_VALIDATOR, INLINE_TAGS
 from easytxt.parsers.table import TableParser
 
+__all__ = (
+    "to_sentences",
+    "validate",
+    "validate_html_table",
+    "to_pq",
+)
+
 
 def to_sentences(
     html_data: Union[str, PyQuery],

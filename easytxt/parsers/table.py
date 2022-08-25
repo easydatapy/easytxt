@@ -3,6 +3,8 @@ from typing import List, Optional, Union
 
 from pyquery import PyQuery
 
+__all__ = ("TableParser",)
+
 
 class TableParser:
     __cached_rows: List[List[str]] = []

@@ -6,6 +6,8 @@ from pyquery import PyQuery
 from easytxt import html, sentences
 from easytxt import text as utext
 
+__all__ = ("TextParser",)
+
 
 class TextParser:
     cached_sentences: List[str] = []

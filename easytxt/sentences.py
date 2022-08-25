@@ -4,6 +4,25 @@ from typing import List, Optional, Union
 from easytxt import abbreviations, config
 from easytxt import text as utext
 
+__all__ = (
+    "from_text",
+    "merge",
+    "add_stop",
+    "capitalize",
+    "title",
+    "uppercase",
+    "lowercase",
+    "replace_chars_by_keys",
+    "remove_chars_by_keys",
+    "split_inline_breaks_to_sentences",
+    "remove_empty",
+    "allow_contains",
+    "from_allow_contains",
+    "to_allow_contains",
+    "deny_contains",
+    "to_text",
+)
+
 
 def from_text(
     text: str,
