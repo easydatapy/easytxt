@@ -33,7 +33,7 @@ def from_text(
     min_chars: int = 5,
 ) -> List[str]:
 
-    if not stop_keys:
+    if stop_keys is None:
         stop_keys = config.STOP_KEYS
 
     stop_re = re.compile(r"([{}]\s+)".format("".join(stop_keys)))
@@ -47,6 +47,7 @@ def from_text(
     text_parts: List[str] = []
 
     for raw_sentence in stop_re.split(raw_text):
+
         sentence = "".join(text_parts)
 
         if raw_sentence and text_parts and len(sentence) >= min_chars:
@@ -237,5 +238,5 @@ def to_text(
 
 def _get_abbr_re_pattern(language="en"):
     abbr_list = getattr(abbreviations, language)
-    abbr_pattern = r"(?:{})\.\s*$".format(r"|\s".join(abbr_list))
+    abbr_pattern = r"(?:{})\.\s*$".format(r"|[\s,\(]".join(abbr_list))
     return re.compile(abbr_pattern, re.IGNORECASE)
