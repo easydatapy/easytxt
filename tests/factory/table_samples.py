@@ -70,3 +70,36 @@ table_without_header_v4 = """
     </tr>
 </table>
 """
+
+table_without_header_v5 = """
+<table class="table table-striped">
+    <tr>
+        <th>UPC</th>
+        <td>a897fe39b1053632</td>
+    </tr>
+    <tr>
+        <th>Product Type</th>
+        <td>Books</td>
+    </tr>
+    <tr>
+        <th>Price (excl. tax)</th>
+        <td>£51.77</td>
+    </tr>
+    <tr>
+        <th>Price (incl. tax)</th>
+        <td>£51.77</td>
+    </tr>
+    <tr>
+        <th>Tax</th>
+        <td>£0.00</td>
+    </tr>
+    <tr>
+        <th>Availability</th>
+        <td>In stock (22 available)</td>
+    </tr>
+    <tr>
+        <th>Number of reviews</th>
+        <td>0</td>
+    </tr>
+</table>
+"""

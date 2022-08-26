@@ -37,6 +37,18 @@ from tests.factory import table_samples
             parse_table(table_samples.table_without_header_v4),
             [{"Type": "Easybook Pro"}, {"Operating system": "etOS"}],
         ),
+        (
+            parse_table(table_samples.table_without_header_v5),
+            [
+                {"UPC": "a897fe39b1053632"},
+                {"Product Type": "Books"},
+                {"Price (excl. tax)": "£51.77"},
+                {"Price (incl. tax)": "£51.77"},
+                {"Tax": "£0.00"},
+                {"Availability": "In stock (22 available)"},
+                {"Number of reviews": "0"},
+            ],
+        ),
     ],
 )
 def test_parse_table_without_header(parser, result):
@@ -78,6 +90,7 @@ def test_parse_table_get_headers():
 
 def test_parse_table_has_header():
     table_rows = parse_table(table_samples.table_with_header)
+
     assert table_rows.has_header()
 
 
