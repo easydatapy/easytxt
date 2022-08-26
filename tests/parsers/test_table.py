@@ -40,13 +40,9 @@ from tests.factory import table_samples
         (
             parse_table(table_samples.table_without_header_v5),
             [
-                {"UPC": "a897fe39b1053632"},
                 {"Product Type": "Books"},
                 {"Price (excl. tax)": "£51.77"},
                 {"Price (incl. tax)": "£51.77"},
-                {"Tax": "£0.00"},
-                {"Availability": "In stock (22 available)"},
-                {"Number of reviews": "0"},
             ],
         ),
     ],

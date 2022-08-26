@@ -219,13 +219,21 @@ def test_parse_text_remove_keys():
     assert tp.text == "First. Second. Third."
 
 
-def test_parse_text_css_query():
-    tp = parse_text(test_text_sentences_v2, css_query="ul")
-    expected_sentences = ["FaceTime HD camera.", "Multi-touch trackpad."]
-    assert tp.sentences == expected_sentences
-
-    tp = parse_text(test_text_sentences_v2, css_query="ul li:eq(0)")
-    assert tp.sentences == ["FaceTime HD camera."]
+@pytest.mark.parametrize(
+    "sentences,result",
+    [
+        (
+            parse_text(test_text_sentences_v2, css_query="ul").sentences,
+            ["FaceTime HD camera.", "Multi-touch trackpad."],
+        ),
+        (
+            parse_text(test_text_sentences_v2, css_query="ul li:eq(0)").sentences,
+            ["FaceTime HD camera."],
+        ),
+    ],
+)
+def test_parse_text_css_query(sentences, result):
+    assert sentences == result
 
 
 def test_parse_text_exclude_css():
@@ -248,26 +256,40 @@ def test_parser_text_merge_sentences_false():
     assert tp.sentences == expected_sentences
 
 
-def test_parser_text_split_inline_breaks_false():
-    test_text = "- notebook - ultrabook"
+@pytest.mark.parametrize(
+    "sentences,result",
+    [
+        (
+            parse_text("- notebook - ultrabook", split_inline_breaks=False).sentences,
+            ["- notebook - ultrabook."],
+        ),
+        (
+            # Default without custom inline_breaks
+            parse_text("- notebook - ultrabook", css_query="ul li:eq(0)").sentences,
+            ["Notebook.", "Ultrabook."],
+        ),
+    ],
+)
+def test_parser_text_split_inline_breaks_false(sentences, result):
+    assert sentences == result
 
-    tp = parse_text(test_text, split_inline_breaks=False)
-    assert tp.sentences == ["- notebook - ultrabook."]
 
-    # Default without custom inline_breaks
-    tp = parse_text(test_text)
-    assert tp.sentences == ["Notebook.", "Ultrabook."]
-
-
-def test_parser_custom_inline_breaks():
-    test_text = "notebook > ultrabook"
-
-    tp = parse_text(test_text, inline_breaks=[">"])
-    assert tp.sentences == ["Notebook.", "Ultrabook."]
-
-    # Default without custom inline_breaks
-    tp = parse_text(test_text)
-    assert tp.sentences == ["Notebook > ultrabook."]
+@pytest.mark.parametrize(
+    "sentences,result",
+    [
+        (
+            parse_text("notebook > ultrabook", inline_breaks=[">"]).sentences,
+            ["Notebook.", "Ultrabook."],
+        ),
+        (
+            # Default without custom inline_breaks
+            parse_text("notebook > ultrabook").sentences,
+            ["Notebook > ultrabook."],
+        ),
+    ],
+)
+def test_parser_custom_inline_breaks(sentences, result):
+    assert sentences == result
 
 
 def test_parse_text_stop_key():
@@ -328,13 +350,19 @@ def test_parse_text_html_table():
     tp = parse_text(table_samples.table_without_header_v5)
 
     assert tp.features == [
-        ("UPC", "a897fe39b1053632"),
         ("Product Type", "Books"),
         ("Price (excl. tax)", "£51.77"),
         ("Price (incl. tax)", "£51.77"),
-        ("Tax", "£0.00"),
-        ("Availability", "In stock (22 available)"),
-        ("Number of reviews", "0"),
+    ]
+
+    tp = parse_text(
+        table_samples.table_without_header_v6,
+        html_text_to_sentences=False,
+    )
+
+    assert tp.features == [
+        ("Product Type", "Books"),
+        ("Price (dddd. tax)", "£51.77"),
     ]
 
     # Check if text with no html table returns empty string
