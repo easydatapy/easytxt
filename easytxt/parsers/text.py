@@ -47,6 +47,7 @@ class TextParser:
         feature_split_keys: Optional[List[str]] = None,
         text_num_to_numeric: bool = False,
         autodetect_html: bool = True,
+        html_text_to_sentences: bool = True,
     ):
 
         self._text = text
@@ -81,6 +82,7 @@ class TextParser:
         self._feature_split_keys = feature_split_keys
         self._text_num_to_numeric = text_num_to_numeric
         self._autodetect_html = autodetect_html
+        self._html_text_to_sentences = html_text_to_sentences
 
     def __iter__(self):
         for sentence in self.sentences:
@@ -189,10 +191,13 @@ class TextParser:
         return self.cached_features
 
     def _text_to_sentences(self):
-        if isinstance(self._text, PyQuery):
-            raw_sentences = self._html_data_to_raw_sentences(self._text)
-        elif self._autodetect_html and html.validate(self._text):
-            raw_sentences = self._html_data_to_raw_sentences(self._text)
+        is_pq = isinstance(self._text, PyQuery)
+
+        if is_pq or (self._autodetect_html and html.validate(self._text)):
+            raw_sentences = self._html_data_to_raw_sentences(
+                html_raw_data=self._text,
+                html_text_to_sentences=self._html_text_to_sentences,
+            )
         else:
             raw_sentences = self._text_to_raw_sentences(self._text)
 
@@ -236,6 +241,7 @@ class TextParser:
     def _html_data_to_raw_sentences(
         self,
         html_raw_data: Union[str, PyQuery],
+        html_text_to_sentences: bool = True,
     ) -> List[str]:
 
         html_raw_sentences = html.to_sentences(
@@ -244,12 +250,15 @@ class TextParser:
             exclude_css=self._exclude_css,
         )
 
-        raw_sentences: List[str] = []
+        if html_text_to_sentences:
+            raw_sentences: List[str] = []
 
-        for html_raw_sentence in html_raw_sentences:
-            raw_sentences += self._text_to_raw_sentences(html_raw_sentence)
+            for html_raw_sentence in html_raw_sentences:
+                raw_sentences += self._text_to_raw_sentences(html_raw_sentence)
 
-        return raw_sentences
+            return raw_sentences
+
+        return html_raw_sentences
 
     def _text_to_raw_sentences(self, raw_text: str) -> List[str]:
         raw_text = self._normalize_raw_text(raw_text)
