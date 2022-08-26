@@ -25,6 +25,8 @@ en = [
     "Oct",
     "Okt",
     "Nov",
+    "Excl",
+    "Incl",
     "Dec",
     "Ph.D",
     "PhD",
