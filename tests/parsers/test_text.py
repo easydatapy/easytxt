@@ -325,6 +325,18 @@ def test_parse_text_html_table():
     tp = parse_text(table_samples.table_without_header_v2)
     assert tp.sentences == ["Height: 2; 4.", "Width: 3; 8."]
 
+    tp = parse_text(table_samples.table_without_header_v5)
+
+    assert tp.features == [
+        ("UPC", "a897fe39b1053632"),
+        ("Product Type", "Books"),
+        ("Price (excl. tax)", "£51.77"),
+        ("Price (incl. tax)", "£51.77"),
+        ("Tax", "£0.00"),
+        ("Availability", "In stock (22 available)"),
+        ("Number of reviews", "0"),
+    ]
+
     # Check if text with no html table returns empty string
     tp = parse_text(test_text_sentences)
     return tp == ""
